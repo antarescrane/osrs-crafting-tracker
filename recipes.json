@@ -1,0 +1,110 @@
+﻿[
+    {
+        "name": "Masori Body (f)",
+        "output_id": 27235,
+        "fee": 0,
+        "inputs": [
+            { "id": 27229, "qty": 1, "name": "Masori body" },
+            { "id": 27269, "qty": 4, "name": "Armadylean plate" }
+        ]
+    },
+    {
+        "name": "Masori Chaps (f)",
+        "output_id": 27241,
+        "fee": 0,
+        "inputs": [
+            { "id": 27232, "qty": 1, "name": "Masori chaps" },
+            { "id": 27269, "qty": 3, "name": "Armadylean plate" }
+        ]
+    },
+    {
+        "name": "Masori Mask (f)",
+        "output_id": 27238,
+        "fee": 0,
+        "inputs": [
+            { "id": 27226, "qty": 1, "name": "Masori mask" },
+            { "id": 27269, "qty": 1, "name": "Armadylean plate" }
+        ]
+    },
+    {
+        "name": "Saturated Heart",
+        "output_id": 26763,
+        "fee": 0,
+        "inputs": [
+            { "id": 20724, "qty": 1, "name": "Imbued heart" },
+            { "id": 26766, "qty": 1, "name": "Ancient relic" }
+        ]
+    },
+    {
+        "name": "Kodai Wand",
+        "output_id": 21006,
+        "fee": 0,
+        "inputs": [
+            { "id": 6914, "qty": 1, "name": "Master wand" },
+            { "id": 21043, "qty": 1, "name": "Kodai insignia" }
+        ]
+    },
+    {
+        "name": "Venator Bow",
+        "output_id": 27612,
+        "fee": 0,
+        "inputs": [
+            { "id": 27614, "qty": 5, "name": "Venator Shard" }
+        ]
+    },
+    {
+        "name": "Webweaver Bow",
+        "output_id": 27655,
+        "fee": 0,
+        "inputs": [
+            { "id": 22550, "qty": 1, "name": "Craw's Bow" },
+            { "id": 27660, "qty": 1, "name": "Fangs of Venenatis" }
+        ]
+    },
+    {
+        "name": "Ursine Chainmace",
+        "output_id": 27652,
+        "fee": 0,
+        "inputs": [
+            { "id": 22542, "qty": 1, "name": "Viggora's Chainmace" },
+            { "id": 27658, "qty": 1, "name": "Wilderness Hilt" }
+        ]
+    },
+    {
+        "name": "Accursed Sceptre",
+        "output_id": 27662,
+        "fee": 0,
+        "inputs": [
+            { "id": 22545, "qty": 1, "name": "Thammaron's Sceptre" },
+            { "id": 27665, "qty": 1, "name": "Skull of Vet'ion" }
+        ]
+    },
+    {
+        "name": "Necklace of Rupture",
+        "output_id": 33639,
+        "fee": 0,
+        "inputs": [
+            { "id": 19547, "qty": 1, "name": "Necklace of Anguish" },
+            { "id": 33636, "qty": 1, "name": "Etched Elder Venator Fang" }
+        ]
+    },
+    {
+        "name": "Amulet of Rancour",
+        "output_id": 29801,
+        "fee": 0,
+        "inputs": [
+            { "id": 19553, "qty": 1, "name": "Amulet of Torture" },
+            { "id": 33534, "qty": 1, "name": "Etched Araxyte Fang" }
+        ]
+    },
+    {
+        "name": "Voidwaker",
+        "output_id": 27690,
+        "fee": 500000,
+        "inputs": [
+            { "id": 27681, "qty": 1, "name": "Voidwaker Blade" },
+            { "id": 27684, "qty": 1, "name": "Voidwaker Hilt" },
+            { "id": 27687, "qty": 1, "name": "Voidwaker Gem" }
+        ]
+    }
+]

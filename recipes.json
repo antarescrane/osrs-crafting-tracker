@@ -12,6 +12,18 @@
                    ]
     },
     {
+        "name":  "Hueycoatl Hide Armour Set",
+        "output_id":  31169,
+        "fee":  0,
+        "inputs":  [
+                       {
+                           "id":  30085,
+                           "qty":  8,
+                           "name":  "Hueycoatl hide"
+                       }
+                   ]
+    },
+    {
         "name":  "Zaryte Crossbow",
         "output_id":  26374,
         "fee":  0,

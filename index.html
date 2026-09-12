@@ -53,6 +53,24 @@
                 ]
             },
             {
+                name: "Kodai Wand",
+                output_id: 21006,
+                fee: 0,
+                inputs: [
+                    { id: 6914, qty: 1, name: "Master Wand" },
+                    { id: 21043, qty: 1, name: "Kodai Insignia" }
+                ]
+            },
+            {
+                name: "Saturated Heart",
+                output_id: 27641,
+                fee: 0,
+                inputs: [
+                    { id: 20714, qty: 1, name: "Imbued Heart" },
+                    { id: 27632, qty: 150000, name: "Ancient Essence" }
+                ]
+            },
+            {
                 name: "Voidwaker",
                 output_id: 27690,
                 fee: 500000,
@@ -149,7 +167,7 @@
                     totalCost += compCost;
 
                     componentsHtml += `<tr class="sub-row">
-                        <td>└─ ${input.name} (x${input.qty})</td>
+                        <td>└─ ${input.name} (x${input.qty.toLocaleString()})</td>
                         <td>${compCost.toLocaleString()}</td>
                         <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
                     </tr>`;

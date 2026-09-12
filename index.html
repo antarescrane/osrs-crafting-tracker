@@ -55,7 +55,7 @@
         const ASSEMBLY_RECIPES = [
             {
                 name: "Masori Body (f)",
-                output_id: 27235,
+                output_id: 27238,
                 fee: 0,
                 inputs: [
                     { id: 27229, qty: 1, name: "Masori body" },
@@ -73,7 +73,7 @@
             },
             {
                 name: "Masori Mask (f)",
-                output_id: 27238,
+                output_id: 27235,
                 fee: 0,
                 inputs: [
                     { id: 27226, qty: 1, name: "Masori mask" },
@@ -202,9 +202,8 @@
 
             for (const recipe of ASSEMBLY_RECIPES) {
                 const outData = prices[recipe.output_id];
-                if (!outData || !outData.high) continue;
+                if (!outData || !outData.low) continue;
 
-                // When instaselling the fortified product, you look at its 'low' price (what buyers are offering)
                 const grossSell = outData.low;
                 const tax = Math.min(Math.floor(grossSell * 0.02), 5000000);
                 const netRevenue = grossSell - tax;
@@ -222,7 +221,6 @@
                         totalCost = null;
                         break;
                     }
-                    // When instabuying components, you look at their 'high' price (what sellers are asking)
                     const unitPrice = inData.high;
                     const compCost = unitPrice * input.qty;
                     totalCost += compCost;

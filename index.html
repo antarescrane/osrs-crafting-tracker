@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>OSRS Assembly Profit Tracker</title>
+    <title>OSRS Market Tracker</title>
     <style>
         body { font-family: monospace; background: #121212; color: #e0e0e0; padding: 20px; }
-        h1 { color: #ff9800; }
-        button { padding: 10px 15px; font-size: 14px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        h1, h2 { color: #ff9800; }
+        button { padding: 10px 15px; font-size: 14px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 4px; margin-bottom: 20px; }
         button:hover { background: #388e3c; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 30px; }
         th, td { border: 1px solid #333; padding: 8px 12px; text-align: right; }
         th { background: #1e1e1e; text-align: center; }
         td:first-child { text-align: left; }
@@ -16,18 +16,23 @@
         .negative { color: #f44336; font-weight: bold; }
         .item-header { background: #252525; font-weight: bold; text-align: left; color: #ffcc80; }
         .sub-row { color: #aaa; font-size: 0.9em; }
+        .best-buy { color: #81c784; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h1>OSRS Crafting Margin Tracker</h1>
-    <button onclick="calculateProfits()">Refresh Prices</button>
+    <h1>OSRS Market Opportunity Tracker</h1>
+    <button onclick="calculateAll()">Refresh Live Prices</button>
     <span id="status" style="margin-left: 15px;"></span>
 
-    <div id="output"></div>
+    <h2>Item Assembly Margins</h2>
+    <div id="assembly-output">Loading assembly data...</div>
+
+    <h2>All Potions Decanting Arbitrage (Bob Barter)</h2>
+    <div id="decant-output">Loading dynamic potion data...</div>
 
     <script>
-        const RECIPES = [
+        const ASSEMBLY_RECIPES = [
             {
                 name: "Necklace of Rupture",
                 output_id: 33639,
@@ -66,11 +71,42 @@
             return json.data || {};
         }
 
-        async function calculateProfits() {
-            document.getElementById("status").innerText = "Fetching live market data...";
+        async function getAllPotionGroups() {
+            const res = await fetch("https://prices.runescape.wiki/api/v1/osrs/mapping", {
+                headers: { "User-Agent": "CraftingTrackerWeb/1.0" }
+            });
+            const items = await res.json();
+            
+            const groups = {};
+            const potionRegex = /^(.+?)\((\d)\)$/;
+
+            for (const item of items) {
+                const match = item.name.match(potionRegex);
+                if (match) {
+                    const baseName = match[1].trim();
+                    const dose = parseInt(match[2]);
+                    
+                    if (!groups[baseName]) {
+                        groups[baseName] = { name: baseName, ids: {} };
+                    }
+                    groups[baseName].ids[dose] = item.id;
+                }
+            }
+
+            return Object.values(groups).filter(p => p.ids[1] && p.ids[2] && p.ids[3] && p.ids[4]);
+        }
+
+        async function calculateAll() {
+            document.getElementById("status").innerText = "Fetching live market & mapping data...";
             const prices = await fetchPrices();
+            const potionList = await getAllPotionGroups();
             document.getElementById("status").innerText = "Updated at " + new Date().toLocaleTimeString();
 
+            renderAssembly(prices);
+            renderDecanting(prices, potionList);
+        }
+
+        function renderAssembly(prices) {
             let html = `<table>
                 <thead>
                     <tr>
@@ -84,7 +120,7 @@
                 </thead>
                 <tbody>`;
 
-            for (const recipe of RECIPES) {
+            for (const recipe of ASSEMBLY_RECIPES) {
                 const outData = prices[recipe.output_id];
                 if (!outData || !outData.high) continue;
 
@@ -131,10 +167,80 @@
             }
 
             html += `</tbody></table>`;
-            document.getElementById("output").innerHTML = html;
+            document.getElementById("assembly-output").innerHTML = html;
         }
 
-        window.onload = calculateProfits;
+        function renderDecanting(prices, potionList) {
+            let html = `<table>
+                <thead>
+                    <tr>
+                        <th style="text-align:left;">Potion</th>
+                        <th>1-Dose (Low)</th>
+                        <th>2-Dose (Low)</th>
+                        <th>3-Dose (Low)</th>
+                        <th>4-Dose (Sell High)</th>
+                        <th>Best Buy Strategy</th>
+                        <th>Net Profit / 4-Dose</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            const results = [];
+
+            for (const pot of potionList) {
+                const p1 = prices[pot.ids[1]] ? prices[pot.ids[1]].low : null;
+                const p2 = prices[pot.ids[2]] ? prices[pot.ids[2]].low : null;
+                const p3 = prices[pot.ids[3]] ? prices[pot.ids[3]].low : null;
+                const p4_sell = prices[pot.ids[4]] ? prices[pot.ids[4]].high : null;
+
+                if (!p4_sell) continue;
+
+                const options = [];
+                if (p1) options.push({ dose: 1, costFor4: p1 * 4 });
+                if (p2) options.push({ dose: 2, costFor4: p2 * 2 });
+                if (p3) options.push({ dose: 3, costFor4: (p3 / 3) * 4 });
+
+                if (options.length === 0) continue;
+
+                options.sort((a, b) => a.costFor4 - b.costFor4);
+                const best = options[0];
+
+                const grossSell = p4_sell;
+                const tax = Math.min(Math.floor(grossSell * 0.02), 5000000);
+                const netRevenue = grossSell - tax;
+                const profit = netRevenue - best.costFor4;
+
+                results.push({
+                    name: pot.name,
+                    p1, p2, p3, p4_sell,
+                    bestDose: best.dose,
+                    bestCostFor4: best.costFor4,
+                    profit
+                });
+            }
+
+            // Sort table by highest profit margin
+            results.sort((a, b) => b.profit - a.profit);
+
+            for (const item of results) {
+                const profitClass = item.profit >= 0 ? "positive" : "negative";
+
+                html += `<tr>
+                    <td style="text-align:left; font-weight:bold;">${item.name}</td>
+                    <td>${item.p1 ? item.p1.toLocaleString() : "-"}</td>
+                    <td>${item.p2 ? item.p2.toLocaleString() : "-"}</td>
+                    <td>${item.p3 ? item.p3.toLocaleString() : "-"}</td>
+                    <td>${item.p4_sell.toLocaleString()}</td>
+                    <td class="best-buy">Buy (${item.bestDose})-dose @ ${Math.round(item.bestCostFor4).toLocaleString()} GP</td>
+                    <td class="${profitClass}">${Math.round(item.profit).toLocaleString()} GP</td>
+                </tr>`;
+            }
+
+            html += `</tbody></table>`;
+            document.getElementById("decant-output").innerHTML = html;
+        }
+
+        calculateAll();
     </script>
 </body>
 </html>

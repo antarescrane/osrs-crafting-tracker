@@ -54,6 +54,68 @@
     <script>
         const ASSEMBLY_RECIPES = [
             {
+                name: "Masori Body (f)",
+                output_id: 27235,
+                fee: 0,
+                inputs: [
+                    { id: 27229, qty: 1, name: "Masori Body" },
+                    { id: 11832, qty: 1, name: "Armadyl Chestplate" }
+                ]
+            },
+            {
+                name: "Masori Chaps (f)",
+                output_id: 27241,
+                fee: 0,
+                inputs: [
+                    { id: 27232, qty: 1, name: "Masori Chaps" },
+                    { id: 11834, qty: 1, name: "Armadyl Chainskirt" }
+                ]
+            },
+            {
+                name: "Masori Mask (f)",
+                output_id: 27238,
+                fee: 0,
+                inputs: [
+                    { id: 27226, qty: 1, name: "Masori Mask" },
+                    { id: 11826, qty: 1, name: "Armadyl Helmet" }
+                ]
+            },
+            {
+                name: "Webweaver Bow",
+                output_id: 27655,
+                fee: 0,
+                inputs: [
+                    { id: 22550, qty: 1, name: "Craw's Bow" },
+                    { id: 27660, qty: 1, name: "Fangs of Venenatis" }
+                ]
+            },
+            {
+                name: "Ursine Chainmace",
+                output_id: 27652,
+                fee: 0,
+                inputs: [
+                    { id: 22542, qty: 1, name: "Viggora's Chainmace" },
+                    { id: 27658, qty: 1, name: "Wilderness Hilt" }
+                ]
+            },
+            {
+                name: "Accursed Sceptre",
+                output_id: 27662,
+                fee: 0,
+                inputs: [
+                    { id: 22545, qty: 1, name: "Thammaron's Sceptre" },
+                    { id: 27665, qty: 1, name: "Skull of Vet'ion" }
+                ]
+            },
+            {
+                name: "Venator Bow",
+                output_id: 26235,
+                fee: 0,
+                inputs: [
+                    { id: 26233, qty: 5, name: "Venator Shard" }
+                ]
+            },
+            {
                 name: "Necklace of Rupture",
                 output_id: 33639,
                 fee: 0,
@@ -72,24 +134,6 @@
                 ]
             },
             {
-                name: "Kodai Wand",
-                output_id: 21006,
-                fee: 0,
-                inputs: [
-                    { id: 6914, qty: 1, name: "Master Wand" },
-                    { id: 21043, qty: 1, name: "Kodai Insignia" }
-                ]
-            },
-            {
-                name: "Saturated Heart",
-                output_id: 27641,
-                fee: 0,
-                inputs: [
-                    { id: 20724, qty: 1, name: "Imbued Heart" },
-                    { id: 27616, qty: 150000, name: "Ancient Essence" }
-                ]
-            },
-            {
                 name: "Voidwaker",
                 output_id: 27690,
                 fee: 500000,
@@ -97,89 +141,6 @@
                     { id: 27681, qty: 1, name: "Voidwaker Blade" },
                     { id: 27684, qty: 1, name: "Voidwaker Hilt" },
                     { id: 27687, qty: 1, name: "Voidwaker Gem" }
-                ]
-            },
-            // Full Oathplate Smithing Tree
-            {
-                name: "Oathplate Helm (From Shards & Shale)",
-                output_id: 33605,
-                fee: 0,
-                inputs: [
-                    { id: 33618, qty: 450, name: "Oathplate Shard" },
-                    { id: 33624, qty: 2520, name: "Crushed Infernal Shale" }
-                ]
-            },
-            {
-                name: "Oathplate Helm (From Infernal Plates)",
-                output_id: 33605,
-                fee: 0,
-                inputs: [
-                    { id: 33621, qty: 9, name: "Infernal Plate" }
-                ]
-            },
-            {
-                name: "Oathplate Chestplate (From Shards & Shale)",
-                output_id: 33602,
-                fee: 0,
-                inputs: [
-                    { id: 33618, qty: 450, name: "Oathplate Shard" },
-                    { id: 33624, qty: 2520, name: "Crushed Infernal Shale" }
-                ]
-            },
-            {
-                name: "Oathplate Chestplate (From Infernal Plates)",
-                output_id: 33602,
-                fee: 0,
-                inputs: [
-                    { id: 33621, qty: 9, name: "Infernal Plate" }
-                ]
-            },
-            {
-                name: "Oathplate Cuisses (From Shards & Shale)",
-                output_id: 33608,
-                fee: 0,
-                inputs: [
-                    { id: 33618, qty: 450, name: "Oathplate Shard" },
-                    { id: 33624, qty: 2520, name: "Crushed Infernal Shale" }
-                ]
-            },
-            {
-                name: "Oathplate Cuisses (From Infernal Plates)",
-                output_id: 33608,
-                fee: 0,
-                inputs: [
-                    { id: 33621, qty: 9, name: "Infernal Plate" }
-                ]
-            },
-            // Hueycoatl Hide Armour Sets
-            {
-                name: "Hueycoatl Hide Body",
-                output_id: 29550,
-                fee: 0,
-                inputs: [
-                    { id: 29544, qty: 12, name: "Hueycoatl Hide" },
-                    { id: 1733, qty: 1, name: "Needle" },
-                    { id: 1734, qty: 1, name: "Thread" }
-                ]
-            },
-            {
-                name: "Hueycoatl Hide Chaps",
-                output_id: 29553,
-                fee: 0,
-                inputs: [
-                    { id: 29544, qty: 8, name: "Hueycoatl Hide" },
-                    { id: 1733, qty: 1, name: "Needle" },
-                    { id: 1734, qty: 1, name: "Thread" }
-                ]
-            },
-            {
-                name: "Hueycoatl Hide Coif",
-                output_id: 29547,
-                fee: 0,
-                inputs: [
-                    { id: 29544, qty: 5, name: "Hueycoatl Hide" },
-                    { id: 1733, qty: 1, name: "Needle" },
-                    { id: 1734, qty: 1, name: "Thread" }
                 ]
             }
         ];
@@ -255,11 +216,6 @@
                 }
 
                 for (const input of recipe.inputs) {
-                    if (input.id === 1733 || input.id === 1734) {
-                        components.push({ name: input.name, cost: 0, qty: input.qty });
-                        continue;
-                    }
-
                     const inData = prices[input.id];
                     if (!inData || !inData.low) {
                         totalCost = null;

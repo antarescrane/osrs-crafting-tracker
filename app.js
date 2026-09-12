@@ -68,6 +68,7 @@ function renderAssembly(prices, assemblyRecipes) {
         const netRevenue = grossSell > 0 ? grossSell - tax : 0;
 
         let totalCost = recipe.fee;
+        let hasAllPrices = (grossSell > 0);
         const components = [];
 
         if (recipe.fee > 0) {
@@ -77,13 +78,16 @@ function renderAssembly(prices, assemblyRecipes) {
         for (const input of recipe.inputs) {
             const inData = prices[input.id] || {};
             const unitPrice = inData.low || 0;
-            const compCost = unitPrice > 0 ? unitPrice * input.qty : 0;
             if (unitPrice > 0) {
+                const compCost = unitPrice * input.qty;
                 totalCost += compCost;
+                components.push({ name: input.name, cost: compCost, qty: input.qty });
+            } else {
+                hasAllPrices = false;
+                components.push({ name: input.name, cost: 0, qty: input.qty });
             }
-            components.push({ name: input.name, cost: compCost, qty: input.qty });
         }
-        if (grossSell === 0) totalCost = 0;
+        if (!hasAllPrices) totalCost = null;
 
         if (totalCost === null) continue;
 

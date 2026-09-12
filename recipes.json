@@ -23,12 +23,12 @@
     "inputs": [
       {"id": 27673, "qty": 1, "name": "Voidwaker Hilt"},
       {"id": 27676, "qty": 1, "name": "Voidwaker Blade"},
-      {"id": 27679, "qty": 1, "name": "Voidwaker Gem"}
+      {"id": 27687, "qty": 1, "name": "Voidwaker Gem"}
     ]
   },
   {
     "name": "Necklace of Rupture",
-    "output_id": 29339,
+    "output_id": 33639,
     "fee": 0,
     "inputs": [
       {"id": 22249, "qty": 1, "name": "Necklace of Anguish"},

@@ -45,10 +45,10 @@
         <span id="status"></span>
     </div>
 
-    <h2>Item Assembly Margins</h2>
+    <h2>Item Assembly Margins (Passive Buy-Low / Sell-High)</h2>
     <div id="assembly-output">Loading assembly data...</div>
 
-    <h2>Potion Decanting Arbitrage</h2>
+    <h2>Potion Decanting Arbitrage (Passive Buy-Low / Sell-High)</h2>
     <div id="decant-output">Loading dynamic potion data...</div>
 
     <script>
@@ -59,7 +59,7 @@
                 fee: 0,
                 inputs: [
                     { id: 27229, qty: 1, name: "Masori body" },
-                    { id: 11828, qty: 1, name: "Armadyl chestplate (Yields 4 plates)" }
+                    { id: 11828, qty: 1, name: "Armadyl chestplate" }
                 ]
             },
             {
@@ -68,7 +68,7 @@
                 fee: 0,
                 inputs: [
                     { id: 27232, qty: 1, name: "Masori chaps" },
-                    { id: 11830, qty: 1, name: "Armadyl chainskirt (Yields 3 plates)" }
+                    { id: 11830, qty: 1, name: "Armadyl chainskirt" }
                 ]
             },
             {
@@ -77,7 +77,7 @@
                 fee: 0,
                 inputs: [
                     { id: 27226, qty: 1, name: "Masori mask" },
-                    { id: 11826, qty: 1, name: "Armadyl helmet (Yields 1 plate)" }
+                    { id: 11826, qty: 1, name: "Armadyl helmet" }
                 ]
             },
             {
@@ -202,9 +202,10 @@
 
             for (const recipe of ASSEMBLY_RECIPES) {
                 const outData = prices[recipe.output_id];
-                if (!outData || !outData.low) continue;
+                // Passive sell product = 'high' price on GE (highest active buy offer you can sell into)
+                if (!outData || !outData.high) continue;
 
-                const grossSell = outData.low;
+                const grossSell = outData.high;
                 const tax = Math.min(Math.floor(grossSell * 0.02), 5000000);
                 const netRevenue = grossSell - tax;
 
@@ -217,12 +218,15 @@
 
                 for (const input of recipe.inputs) {
                     const inData = prices[input.id];
-                    if (!inData || !inData.high) {
+                    // Passive buy input = 'low' price on GE (lowest active sell offer you can buy from)
+                    const buyPrice = (inData && inData.low) ? inData.low : (inData ? inData.high : null);
+                    
+                    if (!buyPrice) {
                         totalCost = null;
                         break;
                     }
-                    const unitPrice = inData.high;
-                    const compCost = unitPrice * input.qty;
+                    
+                    const compCost = buyPrice * input.qty;
                     totalCost += compCost;
 
                     components.push({ name: input.name, cost: compCost, qty: input.qty });
@@ -256,8 +260,8 @@
                 <thead>
                     <tr>
                         <th style="text-align:left;">Item / Component</th>
-                        <th>Total Input Cost (Instabuy)</th>
-                        <th>Product Sell Price (Instasell)</th>
+                        <th>Total Input Cost (Buy Low)</th>
+                        <th>Product Sell Price (Sell High)</th>
                         <th>GE Tax (2%)</th>
                         <th>Net Revenue</th>
                         <th>Net Profit</th>
@@ -300,8 +304,8 @@
                         <th style="text-align:left;">Potion</th>
                         <th>24h Volume</th>
                         <th>GE Limit</th>
-                        <th>4-Dose Price</th>
-                        <th>Best Buy Strategy</th>
+                        <th>4-Dose Sell Price (Sell High)</th>
+                        <th>Best Buy Strategy (Buy Low)</th>
                         <th>Profit / 4-dose</th>
                         <th>Est. 4h Limit Profit</th>
                         <th>ROI %</th>
@@ -312,10 +316,13 @@
             const results = [];
 
             for (const pot of potionList) {
-                const p1 = prices[pot.ids[1]] ? prices[pot.ids[1]].high : null;
-                const p2 = prices[pot.ids[2]] ? prices[pot.ids[2]].high : null;
-                const p3 = prices[pot.ids[3]] ? prices[pot.ids[3]].high : null;
-                const p4_sell = prices[pot.ids[4]] ? prices[pot.ids[4]].low : null;
+                // To buy lower doses passively, we target 'low'
+                const p1 = prices[pot.ids[1]] ? prices[pot.ids[1]].low : null;
+                const p2 = prices[pot.ids[2]] ? prices[pot.ids[2]].low : null;
+                const p3 = prices[pot.ids[3]] ? prices[pot.ids[3]].low : null;
+                
+                // To sell 4-dose passively, we target 'high'
+                const p4_sell = prices[pot.ids[4]] ? prices[pot.ids[4]].high : null;
 
                 const vol4 = volumes[pot.ids[4]] || 0;
 

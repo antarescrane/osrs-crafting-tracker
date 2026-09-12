@@ -27,11 +27,20 @@
     <h1>OSRS Market Opportunity Tracker</h1>
     <div class="controls">
         <button onclick="calculateAll()">Refresh Live Prices</button>
-        <label for="assembly-sort">Sort Assembly By: </label>
+        <label for="assembly-sort">Assembly Sort: </label>
         <select id="assembly-sort" onchange="calculateAll()">
             <option value="profit" selected>Net Profit (High to Low)</option>
             <option value="roi">ROI % (High to Low)</option>
             <option value="name">Item Name (A-Z)</option>
+        </select>
+
+        <label for="potion-sort">Potion Sort: </label>
+        <select id="potion-sort" onchange="calculateAll()">
+            <option value="custom" selected>Custom Score (Volume + Margin)</option>
+            <option value="limitProfit">4h Limit Profit (High to Low)</option>
+            <option value="profit">Net Profit per 4-dose (High to Low)</option>
+            <option value="roi">ROI % (High to Low)</option>
+            <option value="volume">24h Volume (High to Low)</option>
         </select>
         <span id="status"></span>
     </div>
@@ -39,7 +48,7 @@
     <h2>Item Assembly Margins</h2>
     <div id="assembly-output">Loading assembly data...</div>
 
-    <h2>Potion Decanting Arbitrage (Sorted by Price & ROI)</h2>
+    <h2>Potion Decanting Arbitrage</h2>
     <div id="decant-output">Loading dynamic potion data...</div>
 
     <script>
@@ -176,6 +185,14 @@
             return json.data || {};
         }
 
+        async function fetchVolumes() {
+            const res = await fetch("https://prices.runescape.wiki/api/v1/osrs/volumes", {
+                headers: { "User-Agent": "CraftingTrackerWeb/1.0" }
+            });
+            const json = await res.json();
+            return json.data || {};
+        }
+
         async function getAllPotionGroups() {
             const res = await fetch("https://prices.runescape.wiki/api/v1/osrs/mapping", {
                 headers: { "User-Agent": "CraftingTrackerWeb/1.0" }
@@ -192,7 +209,7 @@
                     const dose = parseInt(match[2]);
                     
                     if (!groups[baseName]) {
-                        groups[baseName] = { name: baseName, ids: {} };
+                        groups[baseName] = { name: baseName, ids: {}, limit: item.limit || 2000 };
                     }
                     groups[baseName].ids[dose] = item.id;
                 }
@@ -202,13 +219,14 @@
         }
 
         async function calculateAll() {
-            document.getElementById("status").innerText = "Fetching live market & mapping data...";
+            document.getElementById("status").innerText = "Fetching live market, volume, & mapping data...";
             const prices = await fetchPrices();
+            const volumes = await fetchVolumes();
             const potionList = await getAllPotionGroups();
             document.getElementById("status").innerText = "Updated at " + new Date().toLocaleTimeString();
 
             renderAssembly(prices);
-            renderDecanting(prices, potionList);
+            renderDecanting(prices, volumes, potionList);
         }
 
         function renderAssembly(prices) {
@@ -302,17 +320,17 @@
             document.getElementById("assembly-output").innerHTML = html;
         }
 
-        function renderDecanting(prices, potionList) {
+        function renderDecanting(prices, volumes, potionList) {
             let html = `<table>
                 <thead>
                     <tr>
                         <th style="text-align:left;">Potion</th>
-                        <th>1-Dose</th>
-                        <th>2-Dose</th>
-                        <th>3-Dose</th>
+                        <th>24h Volume</th>
+                        <th>GE Limit</th>
                         <th>4-Dose Price</th>
                         <th>Best Buy Strategy</th>
-                        <th>Net Profit</th>
+                        <th>Profit / 4-dose</th>
+                        <th>Est. 4h Limit Profit</th>
                         <th>ROI %</th>
                     </tr>
                 </thead>
@@ -326,7 +344,9 @@
                 const p3 = prices[pot.ids[3]] ? prices[pot.ids[3]].low : null;
                 const p4_sell = prices[pot.ids[4]] ? prices[pot.ids[4]].high : null;
 
-                if (!p4_sell) continue;
+                const vol4 = volumes[pot.ids[4]] || 0;
+
+                if (!p4_sell || vol4 < 1500) continue;
 
                 const options = [];
                 if (p1) options.push({ dose: 1, costFor4: p1 * 4 });
@@ -343,35 +363,47 @@
                 const netRevenue = grossSell - tax;
                 const profit = netRevenue - best.costFor4;
                 const roi = best.costFor4 > 0 ? (profit / best.costFor4) * 100 : 0;
+                
+                const limitProfit = profit * (pot.limit || 2000);
+
+                // Custom Score: profit * log10(volume) -> rewards steady volume + high profit
+                const customScore = profit > 0 ? profit * Math.log10(vol4 + 1) : profit;
 
                 results.push({
                     name: pot.name,
-                    p1, p2, p3, p4_sell,
+                    volume: vol4,
+                    limit: pot.limit || 2000,
+                    p4_sell,
                     bestDose: best.dose,
                     bestCostFor4: best.costFor4,
                     profit,
-                    roi
+                    limitProfit,
+                    roi,
+                    customScore
                 });
             }
 
+            const sortBy = document.getElementById("potion-sort").value;
             results.sort((a, b) => {
-                if (b.p4_sell !== a.p4_sell) {
-                    return b.p4_sell - a.p4_sell;
-                }
-                return b.roi - a.roi;
+                if (sortBy === "roi") return b.roi - a.roi;
+                if (sortBy === "profit") return b.profit - a.profit;
+                if (sortBy === "volume") return b.volume - a.volume;
+                if (sortBy === "limitProfit") return b.limitProfit - a.limitProfit;
+                return b.customScore - a.customScore; // default custom
             });
 
             for (const item of results) {
                 const profitClass = item.profit >= 0 ? "positive" : "negative";
+                const limitClass = item.limitProfit >= 0 ? "positive" : "negative";
 
                 html += `<tr>
                     <td style="text-align:left; font-weight:bold;">${item.name}</td>
-                    <td>${item.p1 ? item.p1.toLocaleString() : "-"}</td>
-                    <td>${item.p2 ? item.p2.toLocaleString() : "-"}</td>
-                    <td>${item.p3 ? item.p3.toLocaleString() : "-"}</td>
+                    <td>${item.volume.toLocaleString()}</td>
+                    <td>${item.limit.toLocaleString()}</td>
                     <td>${item.p4_sell.toLocaleString()} GP</td>
                     <td class="best-buy">Buy (${item.bestDose})-dose @ ${Math.round(item.bestCostFor4).toLocaleString()} GP</td>
                     <td class="${profitClass}">${Math.round(item.profit).toLocaleString()} GP</td>
+                    <td class="${limitClass}">${Math.round(item.limitProfit).toLocaleString()} GP</td>
                     <td class="roi">${item.roi.toFixed(1)}%</td>
                 </tr>`;
             }

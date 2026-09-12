@@ -1,5 +1,22 @@
 ﻿[
     {
+        "name":  "Saturated heart",
+        "output_id":  26763,
+        "fee":  0,
+        "inputs":  [
+                       {
+                           "id":  20724,
+                           "qty":  1,
+                           "name":  "Imbued heart"
+                       },
+                       {
+                           "id":  27666,
+                           "qty":  150000,
+                           "name":  "Ancient essence"
+                       }
+                   ]
+    },
+    {
         "name":  "Elidinis\u0027 ward (f)",
         "output_id":  27242,
         "fee":  0,
@@ -59,23 +76,6 @@
                            "id":  26231,
                            "qty":  250,
                            "name":  "Nihil shard"
-                       }
-                   ]
-    },
-    {
-        "name":  "Saturated Heart",
-        "output_id":  26763,
-        "fee":  0,
-        "inputs":  [
-                       {
-                           "id":  20724,
-                           "qty":  1,
-                           "name":  "Imbued heart"
-                       },
-                       {
-                           "id":  26766,
-                           "qty":  1,
-                           "name":  "Ancient relic"
                        }
                    ]
     },

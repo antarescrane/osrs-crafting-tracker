@@ -6,8 +6,9 @@
     <style>
         body { font-family: monospace; background: #121212; color: #e0e0e0; padding: 20px; }
         h1, h2 { color: #ff9800; }
-        button { padding: 10px 15px; font-size: 14px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 4px; margin-bottom: 20px; }
+        button { padding: 8px 12px; font-size: 14px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 4px; margin-right: 10px; }
         button:hover { background: #388e3c; }
+        select { padding: 8px 12px; font-size: 14px; background: #252525; color: #e0e0e0; border: 1px solid #444; border-radius: 4px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 30px; }
         th, td { border: 1px solid #333; padding: 8px 12px; text-align: right; }
         th { background: #1e1e1e; text-align: center; }
@@ -18,13 +19,22 @@
         .sub-row { color: #aaa; font-size: 0.9em; }
         .best-buy { color: #81c784; font-weight: bold; }
         .roi { color: #64b5f6; font-weight: bold; }
+        .controls { margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
     </style>
 </head>
 <body>
 
     <h1>OSRS Market Opportunity Tracker</h1>
-    <button onclick="calculateAll()">Refresh Live Prices</button>
-    <span id="status" style="margin-left: 15px;"></span>
+    <div class="controls">
+        <button onclick="calculateAll()">Refresh Live Prices</button>
+        <label for="assembly-sort">Sort Assembly By: </label>
+        <select id="assembly-sort" onchange="calculateAll()">
+            <option value="profit" selected>Net Profit (High to Low)</option>
+            <option value="roi">ROI % (High to Low)</option>
+            <option value="name">Item Name (A-Z)</option>
+        </select>
+        <span id="status"></span>
+    </div>
 
     <h2>Item Assembly Margins</h2>
     <div id="assembly-output">Loading assembly data...</div>
@@ -202,6 +212,55 @@
         }
 
         function renderAssembly(prices) {
+            const calculatedRecipes = [];
+
+            for (const recipe of ASSEMBLY_RECIPES) {
+                const outData = prices[recipe.output_id];
+                if (!outData || !outData.high) continue;
+
+                const grossSell = outData.high;
+                const tax = Math.min(Math.floor(grossSell * 0.02), 5000000);
+                const netRevenue = grossSell - tax;
+
+                let totalCost = recipe.fee;
+                const components = [];
+
+                if (recipe.fee > 0) {
+                    components.push({ name: "Assembly Fee", cost: recipe.fee, qty: 1 });
+                }
+
+                for (const input of recipe.inputs) {
+                    const inData = prices[input.id];
+                    if (!inData || !inData.low) continue;
+                    const unitPrice = inData.low;
+                    const compCost = unitPrice * input.qty;
+                    totalCost += compCost;
+
+                    components.push({ name: input.name, cost: compCost, qty: input.qty });
+                }
+
+                const profit = netRevenue - totalCost;
+                const roi = totalCost > 0 ? (profit / totalCost) * 100 : 0;
+
+                calculatedRecipes.push({
+                    name: recipe.name,
+                    totalCost,
+                    grossSell,
+                    tax,
+                    netRevenue,
+                    profit,
+                    roi,
+                    components
+                });
+            }
+
+            const sortBy = document.getElementById("assembly-sort").value;
+            calculatedRecipes.sort((a, b) => {
+                if (sortBy === "roi") return b.roi - a.roi;
+                if (sortBy === "name") return a.name.localeCompare(b.name);
+                return b.profit - a.profit;
+            });
+
             let html = `<table>
                 <thead>
                     <tr>
@@ -216,51 +275,26 @@
                 </thead>
                 <tbody>`;
 
-            for (const recipe of ASSEMBLY_RECIPES) {
-                const outData = prices[recipe.output_id];
-                if (!outData || !outData.high) continue;
+            for (const recipe of calculatedRecipes) {
+                const profitClass = recipe.profit >= 0 ? "positive" : "negative";
 
-                const grossSell = outData.high;
-                const tax = Math.min(Math.floor(grossSell * 0.02), 5000000);
-                const netRevenue = grossSell - tax;
-
-                let totalCost = recipe.fee;
                 let componentsHtml = "";
-
-                if (recipe.fee > 0) {
+                for (const comp of recipe.components) {
                     componentsHtml += `<tr class="sub-row">
-                        <td>└─ Assembly Fee</td>
-                        <td>${recipe.fee.toLocaleString()}</td>
+                        <td>└─ ${comp.name} ${comp.qty > 1 ? `(x${comp.qty.toLocaleString()})` : ""}</td>
+                        <td>${comp.cost.toLocaleString()}</td>
                         <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
                     </tr>`;
                 }
-
-                for (const input of recipe.inputs) {
-                    const inData = prices[input.id];
-                    if (!inData || !inData.low) continue;
-                    const unitPrice = inData.low;
-                    const compCost = unitPrice * input.qty;
-                    totalCost += compCost;
-
-                    componentsHtml += `<tr class="sub-row">
-                        <td>└─ ${input.name} (x${input.qty.toLocaleString()})</td>
-                        <td>${compCost.toLocaleString()}</td>
-                        <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
-                    </tr>`;
-                }
-
-                const profit = netRevenue - totalCost;
-                const profitClass = profit >= 0 ? "positive" : "negative";
-                const roi = totalCost > 0 ? (profit / totalCost) * 100 : 0;
 
                 html += `<tr class="item-header">
                     <td>${recipe.name}</td>
-                    <td>${totalCost.toLocaleString()}</td>
-                    <td>${grossSell.toLocaleString()}</td>
-                    <td>-${tax.toLocaleString()}</td>
-                    <td>${netRevenue.toLocaleString()}</td>
-                    <td class="${profitClass}">${profit.toLocaleString()} GP</td>
-                    <td class="roi">${roi.toFixed(1)}%</td>
+                    <td>${recipe.totalCost.toLocaleString()}</td>
+                    <td>${recipe.grossSell.toLocaleString()}</td>
+                    <td>-${recipe.tax.toLocaleString()}</td>
+                    <td>${recipe.netRevenue.toLocaleString()}</td>
+                    <td class="${profitClass}">${recipe.profit.toLocaleString()} GP</td>
+                    <td class="roi">${recipe.roi.toFixed(1)}%</td>
                 </tr>` + componentsHtml;
             }
 

@@ -45,21 +45,21 @@
         <span id="status"></span>
     </div>
 
-    <h2>Item Assembly Margins (Passive Buy-Low / Sell-High)</h2>
+    <h2>Item Assembly Margins</h2>
     <div id="assembly-output">Loading assembly data...</div>
 
-    <h2>Potion Decanting Arbitrage (Passive Buy-Low / Sell-High)</h2>
+    <h2>Potion Decanting Arbitrage</h2>
     <div id="decant-output">Loading dynamic potion data...</div>
 
     <script>
         const ASSEMBLY_RECIPES = [
             {
                 name: "Masori Body (f)",
-                output_id: 27238,
+                output_id: 27235,
                 fee: 0,
                 inputs: [
                     { id: 27229, qty: 1, name: "Masori body" },
-                    { id: 11828, qty: 1, name: "Armadyl chestplate" }
+                    { id: 27269, qty: 4, name: "Armadylean plate" }
                 ]
             },
             {
@@ -68,16 +68,34 @@
                 fee: 0,
                 inputs: [
                     { id: 27232, qty: 1, name: "Masori chaps" },
-                    { id: 11830, qty: 1, name: "Armadyl chainskirt" }
+                    { id: 27269, qty: 3, name: "Armadylean plate" }
                 ]
             },
             {
                 name: "Masori Mask (f)",
-                output_id: 27235,
+                output_id: 27238,
                 fee: 0,
                 inputs: [
                     { id: 27226, qty: 1, name: "Masori mask" },
-                    { id: 11826, qty: 1, name: "Armadyl helmet" }
+                    { id: 27269, qty: 1, name: "Armadylean plate" }
+                ]
+            },
+            {
+                name: "Saturated Heart",
+                output_id: 26763,
+                fee: 0,
+                inputs: [
+                    { id: 20724, qty: 1, name: "Imbued heart" },
+                    { id: 26766, qty: 1, name: "Ancient relic" }
+                ]
+            },
+            {
+                name: "Kodai Wand",
+                output_id: 21006,
+                fee: 0,
+                inputs: [
+                    { id: 6914, qty: 1, name: "Master wand" },
+                    { id: 21047, qty: 1, name: "Kodai insignia" }
                 ]
             },
             {
@@ -202,7 +220,6 @@
 
             for (const recipe of ASSEMBLY_RECIPES) {
                 const outData = prices[recipe.output_id];
-                // Passive sell product = 'high' price on GE (highest active buy offer you can sell into)
                 if (!outData || !outData.high) continue;
 
                 const grossSell = outData.high;
@@ -218,15 +235,12 @@
 
                 for (const input of recipe.inputs) {
                     const inData = prices[input.id];
-                    // Passive buy input = 'low' price on GE (lowest active sell offer you can buy from)
-                    const buyPrice = (inData && inData.low) ? inData.low : (inData ? inData.high : null);
-                    
-                    if (!buyPrice) {
+                    if (!inData || !inData.low) {
                         totalCost = null;
                         break;
                     }
-                    
-                    const compCost = buyPrice * input.qty;
+                    const unitPrice = inData.low;
+                    const compCost = unitPrice * input.qty;
                     totalCost += compCost;
 
                     components.push({ name: input.name, cost: compCost, qty: input.qty });
@@ -260,8 +274,8 @@
                 <thead>
                     <tr>
                         <th style="text-align:left;">Item / Component</th>
-                        <th>Total Input Cost (Buy Low)</th>
-                        <th>Product Sell Price (Sell High)</th>
+                        <th>Buy Offer (Low)</th>
+                        <th>Sell Offer (High)</th>
                         <th>GE Tax (2%)</th>
                         <th>Net Revenue</th>
                         <th>Net Profit</th>
@@ -304,8 +318,8 @@
                         <th style="text-align:left;">Potion</th>
                         <th>24h Volume</th>
                         <th>GE Limit</th>
-                        <th>4-Dose Sell Price (Sell High)</th>
-                        <th>Best Buy Strategy (Buy Low)</th>
+                        <th>4-Dose Price</th>
+                        <th>Best Buy Strategy</th>
                         <th>Profit / 4-dose</th>
                         <th>Est. 4h Limit Profit</th>
                         <th>ROI %</th>
@@ -316,12 +330,9 @@
             const results = [];
 
             for (const pot of potionList) {
-                // To buy lower doses passively, we target 'low'
                 const p1 = prices[pot.ids[1]] ? prices[pot.ids[1]].low : null;
                 const p2 = prices[pot.ids[2]] ? prices[pot.ids[2]].low : null;
                 const p3 = prices[pot.ids[3]] ? prices[pot.ids[3]].low : null;
-                
-                // To sell 4-dose passively, we target 'high'
                 const p4_sell = prices[pot.ids[4]] ? prices[pot.ids[4]].high : null;
 
                 const vol4 = volumes[pot.ids[4]] || 0;

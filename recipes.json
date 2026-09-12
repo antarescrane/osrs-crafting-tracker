@@ -1,5 +1,22 @@
 ﻿[
     {
+        "name":  "Elidinis\u0027 ward (f)",
+        "output_id":  27242,
+        "fee":  0,
+        "inputs":  [
+                       {
+                           "id":  27233,
+                           "qty":  1,
+                           "name":  "Elidinis\u0027 ward"
+                       },
+                       {
+                           "id":  25985,
+                           "qty":  1,
+                           "name":  "Arcane sigil"
+                       }
+                   ]
+    },
+    {
         "name":  "Hueycoatl Hide Armour Set",
         "output_id":  31169,
         "fee":  0,

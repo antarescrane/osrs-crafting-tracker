@@ -17,7 +17,7 @@
         .item-header { background: #252525; font-weight: bold; text-align: left; color: #ffcc80; }
         .sub-row { color: #aaa; font-size: 0.9em; }
         .best-buy { color: #81c784; font-weight: bold; }
-        .low-vol-row { opacity: 0.55; }
+        .roi { color: #64b5f6; }
     </style>
 </head>
 <body>
@@ -29,12 +29,10 @@
     <h2>Item Assembly Margins</h2>
     <div id="assembly-output">Loading assembly data...</div>
 
-    <h2>Potion Decanting Arbitrage (Sorted by ROI %, High Volume First)</h2>
-    <div id="decant-output">Loading potion data...</div>
+    <h2>Potion Decanting Arbitrage (Sorted by Price & ROI)</h2>
+    <div id="decant-output">Loading dynamic potion data...</div>
 
     <script>
-        const MIN_5M_DOSES = 500; // Threshold for high-volume priority
-
         const ASSEMBLY_RECIPES = [
             {
                 name: "Necklace of Rupture",
@@ -74,14 +72,6 @@
             return json.data || {};
         }
 
-        async function fetchVolumes() {
-            const res = await fetch("https://prices.runescape.wiki/api/v1/osrs/5m", {
-                headers: { "User-Agent": "CraftingTrackerWeb/1.0" }
-            });
-            const json = await res.json();
-            return json.data || {};
-        }
-
         async function getAllPotionGroups() {
             const res = await fetch("https://prices.runescape.wiki/api/v1/osrs/mapping", {
                 headers: { "User-Agent": "CraftingTrackerWeb/1.0" }
@@ -89,6 +79,7 @@
             const items = await res.json();
             
             const groups = {};
+            // Regex handles standard "Potion(4)", "Extended anti-venom+(4)", etc.
             const potionRegex = /^(.+?)\((\d)\)$/;
 
             for (const item of items) {
@@ -108,16 +99,13 @@
         }
 
         async function calculateAll() {
-            document.getElementById("status").innerText = "Fetching live market, volume & mapping data...";
-            const [prices, volumes, potionList] = await Promise.all([
-                fetchPrices(),
-                fetchVolumes(),
-                getAllPotionGroups()
-            ]);
+            document.getElementById("status").innerText = "Fetching live market & mapping data...";
+            const prices = await fetchPrices();
+            const potionList = await getAllPotionGroups();
             document.getElementById("status").innerText = "Updated at " + new Date().toLocaleTimeString();
 
             renderAssembly(prices);
-            renderDecanting(prices, volumes, potionList);
+            renderDecanting(prices, potionList);
         }
 
         function renderAssembly(prices) {
@@ -130,7 +118,6 @@
                         <th>GE Tax (2%)</th>
                         <th>Net Revenue</th>
                         <th>Net Profit</th>
-                        <th>ROI %</th>
                     </tr>
                 </thead>
                 <tbody>`;
@@ -150,7 +137,7 @@
                     componentsHtml += `<tr class="sub-row">
                         <td>└─ Assembly Fee</td>
                         <td>${recipe.fee.toLocaleString()}</td>
-                        <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                        <td>-</td><td>-</td><td>-</td><td>-</td>
                     </tr>`;
                 }
 
@@ -164,12 +151,11 @@
                     componentsHtml += `<tr class="sub-row">
                         <td>└─ ${input.name} (x${input.qty})</td>
                         <td>${compCost.toLocaleString()}</td>
-                        <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                        <td>-</td><td>-</td><td>-</td><td>-</td>
                     </tr>`;
                 }
 
                 const profit = netRevenue - totalCost;
-                const roi = totalCost > 0 ? (profit / totalCost) * 100 : 0;
                 const profitClass = profit >= 0 ? "positive" : "negative";
 
                 html += `<tr class="item-header">
@@ -179,7 +165,6 @@
                     <td>-${tax.toLocaleString()}</td>
                     <td>${netRevenue.toLocaleString()}</td>
                     <td class="${profitClass}">${profit.toLocaleString()} GP</td>
-                    <td class="${profitClass}">${roi.toFixed(2)}%</td>
                 </tr>` + componentsHtml;
             }
 
@@ -187,7 +172,7 @@
             document.getElementById("assembly-output").innerHTML = html;
         }
 
-        function renderDecanting(prices, volumes, potionList) {
+        function renderDecanting(prices, potionList) {
             let html = `<table>
                 <thead>
                     <tr>
@@ -195,10 +180,9 @@
                         <th>1-Dose</th>
                         <th>2-Dose</th>
                         <th>3-Dose</th>
-                        <th>4-Dose (Sell High)</th>
-                        <th>5m Volume (Doses)</th>
+                        <th>4-Dose Price</th>
                         <th>Best Buy Strategy</th>
-                        <th>Net Profit / 4-Dose</th>
+                        <th>Net Profit</th>
                         <th>ROI %</th>
                     </tr>
                 </thead>
@@ -213,14 +197,6 @@
                 const p4_sell = prices[pot.ids[4]] ? prices[pot.ids[4]].high : null;
 
                 if (!p4_sell) continue;
-
-                let total5mDoses = 0;
-                for (let d = 1; d <= 4; d++) {
-                    const volData = volumes[pot.ids[d]];
-                    if (volData) {
-                        total5mDoses += ((volData.lowPriceVolume || 0) + (volData.highPriceVolume || 0)) * d;
-                    }
-                }
 
                 const options = [];
                 if (p1) options.push({ dose: 1, costFor4: p1 * 4 });
@@ -244,34 +220,31 @@
                     bestDose: best.dose,
                     bestCostFor4: best.costFor4,
                     profit,
-                    roi,
-                    volume: total5mDoses,
-                    isHighVolume: total5mDoses >= MIN_5M_DOSES
+                    roi
                 });
             }
 
-            // Primary sort: High Volume first; Secondary sort: Highest ROI %
+            // Primary Sort: Most Expensive 4-Dose Potion first
+            // Secondary Sort: Highest ROI %
             results.sort((a, b) => {
-                if (a.isHighVolume !== b.isHighVolume) {
-                    return b.isHighVolume ? 1 : -1;
+                if (b.p4_sell !== a.p4_sell) {
+                    return b.p4_sell - a.p4_sell;
                 }
                 return b.roi - a.roi;
             });
 
             for (const item of results) {
                 const profitClass = item.profit >= 0 ? "positive" : "negative";
-                const rowClass = item.isHighVolume ? "" : "low-vol-row";
 
-                html += `<tr class="${rowClass}">
-                    <td style="text-align:left; font-weight:bold;">${item.name}${item.isHighVolume ? '' : ' <span style="font-size:0.8em; color:#888;">(Low Vol)</span>'}</td>
+                html += `<tr>
+                    <td style="text-align:left; font-weight:bold;">${item.name}</td>
                     <td>${item.p1 ? item.p1.toLocaleString() : "-"}</td>
                     <td>${item.p2 ? item.p2.toLocaleString() : "-"}</td>
                     <td>${item.p3 ? item.p3.toLocaleString() : "-"}</td>
-                    <td>${item.p4_sell.toLocaleString()}</td>
-                    <td style="color:#aaa;">${item.volume.toLocaleString()}</td>
+                    <td>${item.p4_sell.toLocaleString()} GP</td>
                     <td class="best-buy">Buy (${item.bestDose})-dose @ ${Math.round(item.bestCostFor4).toLocaleString()} GP</td>
                     <td class="${profitClass}">${Math.round(item.profit).toLocaleString()} GP</td>
-                    <td class="${profitClass}">${item.roi.toFixed(2)}%</td>
+                    <td class="roi">${item.roi.toFixed(1)}%</td>
                 </tr>`;
             }
 

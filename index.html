@@ -99,13 +99,14 @@
                     { id: 27687, qty: 1, name: "Voidwaker Gem" }
                 ]
             },
+            // Full Oathplate Smithing Tree (Shards -> Nuggets -> Chunks -> Plates -> Armor Piece)
             {
-                name: "Oathplate Helm (From Raw Components)",
+                name: "Oathplate Helm (From Shards & Shale)",
                 output_id: 33605,
                 fee: 0,
                 inputs: [
-                    { id: 33618, qty: 45, name: "Oathplate Shard" },
-                    { id: 33624, qty: 252, name: "Crushed Infernal Shale" }
+                    { id: 33618, qty: 450, name: "Oathplate Shard" },
+                    { id: 33624, qty: 2520, name: "Crushed Infernal Shale" }
                 ]
             },
             {
@@ -117,12 +118,12 @@
                 ]
             },
             {
-                name: "Oathplate Chestplate (From Raw Components)",
+                name: "Oathplate Chestplate (From Shards & Shale)",
                 output_id: 33602,
                 fee: 0,
                 inputs: [
-                    { id: 33618, qty: 45, name: "Oathplate Shard" },
-                    { id: 33624, qty: 252, name: "Crushed Infernal Shale" }
+                    { id: 33618, qty: 450, name: "Oathplate Shard" },
+                    { id: 33624, qty: 2520, name: "Crushed Infernal Shale" }
                 ]
             },
             {
@@ -134,12 +135,12 @@
                 ]
             },
             {
-                name: "Oathplate Cuisses (From Raw Components)",
+                name: "Oathplate Cuisses (From Shards & Shale)",
                 output_id: 33608,
                 fee: 0,
                 inputs: [
-                    { id: 33618, qty: 45, name: "Oathplate Shard" },
-                    { id: 33624, qty: 252, name: "Crushed Infernal Shale" }
+                    { id: 33618, qty: 450, name: "Oathplate Shard" },
+                    { id: 33624, qty: 2520, name: "Crushed Infernal Shale" }
                 ]
             },
             {
@@ -148,6 +149,37 @@
                 fee: 0,
                 inputs: [
                     { id: 33621, qty: 9, name: "Infernal Plate" }
+                ]
+            },
+            // Hueycoatl Hide Armour Sets
+            {
+                name: "Hueycoatl Hide Body",
+                output_id: 29550, // placeholder id or actual item mapping, checking via wiki mapping dynamically if possible or standard IDs
+                fee: 0,
+                inputs: [
+                    { id: 29544, qty: 12, name: "Hueycoatl Hide" },
+                    { id: 1733, qty: 1, name: "Needle" },
+                    { id: 1734, qty: 1, name: "Thread" }
+                ]
+            },
+            {
+                name: "Hueycoatl Hide Chaps",
+                output_id: 29553,
+                fee: 0,
+                inputs: [
+                    { id: 29544, qty: 8, name: "Hueycoatl Hide" },
+                    { id: 1733, qty: 1, name: "Needle" },
+                    { id: 1734, qty: 1, name: "Thread" }
+                ]
+            },
+            {
+                name: "Hueycoatl Hide Coif",
+                output_id: 29547,
+                fee: 0,
+                inputs: [
+                    { id: 29544, qty: 5, name: "Hueycoatl Hide" },
+                    { id: 1733, qty: 1, name: "Needle" },
+                    { id: 1734, qty: 1, name: "Thread" }
                 ]
             },
             {
@@ -248,14 +280,25 @@
                 }
 
                 for (const input of recipe.inputs) {
+                    // Skip negligible cost tools like needle/thread if price isn't tracked
+                    if (input.id === 1733 || input.id === 1734) {
+                        components.push({ name: input.name, cost: 0, qty: input.qty });
+                        continue;
+                    }
+
                     const inData = prices[input.id];
-                    if (!inData || !inData.low) continue;
+                    if (!inData || !inData.low) {
+                        totalCost = null; // Missing component data
+                        break;
+                    }
                     const unitPrice = inData.low;
                     const compCost = unitPrice * input.qty;
                     totalCost += compCost;
 
                     components.push({ name: input.name, cost: compCost, qty: input.qty });
                 }
+
+                if (totalCost === null) continue;
 
                 const profit = netRevenue - totalCost;
                 const roi = totalCost > 0 ? (profit / totalCost) * 100 : 0;
@@ -300,7 +343,7 @@
                 for (const comp of recipe.components) {
                     componentsHtml += `<tr class="sub-row">
                         <td>└─ ${comp.name} ${comp.qty > 1 ? `(x${comp.qty.toLocaleString()})` : ""}</td>
-                        <td>${comp.cost.toLocaleString()}</td>
+                        <td>${comp.cost > 0 ? comp.cost.toLocaleString() : "-"}</td>
                         <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
                     </tr>`;
                 }
@@ -365,8 +408,6 @@
                 const roi = best.costFor4 > 0 ? (profit / best.costFor4) * 100 : 0;
                 
                 const limitProfit = profit * (pot.limit || 2000);
-
-                // Custom Score: profit * log10(volume) -> rewards steady volume + high profit
                 const customScore = profit > 0 ? profit * Math.log10(vol4 + 1) : profit;
 
                 results.push({
@@ -389,7 +430,7 @@
                 if (sortBy === "profit") return b.profit - a.profit;
                 if (sortBy === "volume") return b.volume - a.volume;
                 if (sortBy === "limitProfit") return b.limitProfit - a.limitProfit;
-                return b.customScore - a.customScore; // default custom
+                return b.customScore - a.customScore;
             });
 
             for (const item of results) {

@@ -1,10 +1,14 @@
-﻿[
+[
   {
     "name": "Venator Bow",
     "output_id": 27612,
     "fee": 0,
     "inputs": [
-      {"id": 27614, "qty": 5, "name": "Venator Shard (x5)"}
+      {
+        "id": 27614,
+        "qty": 5,
+        "name": "Venator Shard (x5)"
+      }
     ]
   },
   {
@@ -12,8 +16,16 @@
     "output_id": 29801,
     "fee": 0,
     "inputs": [
-      {"id": 19535, "qty": 1, "name": "Amulet of Torture"},
-      {"id": 33534, "qty": 1, "name": "Etched Araxyte Fang"}
+      {
+        "id": 19535,
+        "qty": 1,
+        "name": "Amulet of Torture"
+      },
+      {
+        "id": 33534,
+        "qty": 1,
+        "name": "Etched Araxyte Fang"
+      }
     ]
   },
   {
@@ -21,9 +33,21 @@
     "output_id": 27690,
     "fee": 500000,
     "inputs": [
-      {"id": 27673, "qty": 1, "name": "Voidwaker Hilt"},
-      {"id": 27676, "qty": 1, "name": "Voidwaker Blade"},
-      {"id": 27687, "qty": 1, "name": "Voidwaker Gem"}
+      {
+        "id": 27681,
+        "qty": 1,
+        "name": "Voidwaker Hilt"
+      },
+      {
+        "id": 27684,
+        "qty": 1,
+        "name": "Voidwaker Blade"
+      },
+      {
+        "id": 27687,
+        "qty": 1,
+        "name": "Voidwaker Gem"
+      }
     ]
   },
   {
@@ -31,8 +55,16 @@
     "output_id": 33639,
     "fee": 0,
     "inputs": [
-      {"id": 19553, "qty": 1, "name": "Necklace of Anguish"},
-      {"id": 33636, "qty": 1, "name": "Etched Elder Venator Fang"}
+      {
+        "id": 19553,
+        "qty": 1,
+        "name": "Necklace of Anguish"
+      },
+      {
+        "id": 33636,
+        "qty": 1,
+        "name": "Etched Elder Venator Fang"
+      }
     ]
   },
   {
@@ -40,8 +72,16 @@
     "output_id": 21006,
     "fee": 0,
     "inputs": [
-      {"id": 6914, "qty": 1, "name": "Master Wand"},
-      {"id": 21043, "qty": 1, "name": "Kodai Insignia"}
+      {
+        "id": 6914,
+        "qty": 1,
+        "name": "Master Wand"
+      },
+      {
+        "id": 21043,
+        "qty": 1,
+        "name": "Kodai Insignia"
+      }
     ]
   }
 ]

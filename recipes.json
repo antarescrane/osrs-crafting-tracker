@@ -1,5 +1,95 @@
 ﻿[
     {
+        "name":  "Zamorak Godsword",
+        "output_id":  11808,
+        "fee":  0,
+        "inputs":  [
+                       {
+                           "id":  11798,
+                           "qty":  1,
+                           "name":  "Godsword blade"
+                       },
+                       {
+                           "id":  11708,
+                           "qty":  1,
+                           "name":  "Zamorak hilt"
+                       }
+                   ]
+    },
+    {
+        "name":  "Saradomin Godsword",
+        "output_id":  11806,
+        "fee":  0,
+        "inputs":  [
+                       {
+                           "id":  11798,
+                           "qty":  1,
+                           "name":  "Godsword blade"
+                       },
+                       {
+                           "id":  11706,
+                           "qty":  1,
+                           "name":  "Saradomin hilt"
+                       }
+                   ]
+    },
+    {
+        "name":  "Bandos Godsword",
+        "output_id":  11804,
+        "fee":  0,
+        "inputs":  [
+                       {
+                           "id":  11798,
+                           "qty":  1,
+                           "name":  "Godsword blade"
+                       },
+                       {
+                           "id":  11704,
+                           "qty":  1,
+                           "name":  "Bandos hilt"
+                       }
+                   ]
+    },
+    {
+        "name":  "Armadyl Godsword",
+        "output_id":  11802,
+        "fee":  0,
+        "inputs":  [
+                       {
+                           "id":  11798,
+                           "qty":  1,
+                           "name":  "Godsword blade"
+                       },
+                       {
+                           "id":  11702,
+                           "qty":  1,
+                           "name":  "Armadyl hilt"
+                       }
+                   ]
+    },
+    {
+        "name":  "Godsword Blade",
+        "output_id":  11798,
+        "fee":  0,
+        "inputs":  [
+                       {
+                           "id":  11818,
+                           "qty":  1,
+                           "name":  "Godsword shard 1"
+                       },
+                       {
+                           "id":  11820,
+                           "qty":  1,
+                           "name":  "Godsword shard 2"
+                       },
+                       {
+                           "id":  11822,
+                           "qty":  1,
+                           "name":  "Godsword shard 3"
+                       }
+                   ]
+    },
+    {
         "name":  "Saturated heart",
         "output_id":  26763,
         "fee":  0,

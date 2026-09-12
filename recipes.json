@@ -1,19 +1,10 @@
 ﻿[
   {
-    "name": "Kodai Wand",
-    "output_id": 22323,
-    "fee": 0,
-    "inputs": [
-      { "id": 6914, "qty": 1, "name": "Master wand" },
-      { "id": 22322, "qty": 1, "name": "Kodai insignia" }
-    ]
-  },
-  {
     "name": "Venator Bow",
     "output_id": 27612,
     "fee": 0,
     "inputs": [
-      { "id": 27614, "qty": 5, "name": "Venator Shard" }
+      {"id": 27614, "qty": 5, "name": "Venator Shard (x5)"}
     ]
   },
   {
@@ -21,17 +12,8 @@
     "output_id": 29801,
     "fee": 0,
     "inputs": [
-      { "id": 19553, "qty": 1, "name": "Amulet of Torture" },
-      { "id": 33534, "qty": 1, "name": "Etched Araxyte Fang" }
-    ]
-  },
-  {
-    "name": "Necklace of Rupture",
-    "output_id": 33639,
-    "fee": 0,
-    "inputs": [
-      { "id": 19547, "qty": 1, "name": "Necklace of Anguish" },
-      { "id": 33636, "qty": 1, "name": "Etched Elder Venator Fang" }
+      {"id": 19535, "qty": 1, "name": "Amulet of Torture"},
+      {"id": 33534, "qty": 1, "name": "Etched Araxyte Fang"}
     ]
   },
   {
@@ -39,17 +21,27 @@
     "output_id": 27690,
     "fee": 500000,
     "inputs": [
-      { "id": 27681, "qty": 1, "name": "Voidwaker Hilt" },
-      { "id": 27684, "qty": 1, "name": "Voidwaker Blade" },
-      { "id": 27687, "qty": 1, "name": "Voidwaker Gem" }
+      {"id": 27673, "qty": 1, "name": "Voidwaker Hilt"},
+      {"id": 27676, "qty": 1, "name": "Voidwaker Blade"},
+      {"id": 27679, "qty": 1, "name": "Voidwaker Gem"}
     ]
   },
   {
-    "name": "Hueycoatl Hide Armour Set",
-    "output_id": 29624,
+    "name": "Necklace of Rupture",
+    "output_id": 29339,
     "fee": 0,
     "inputs": [
-      { "id": 29618, "qty": 8, "name": "Hueycoatl hide" }
+      {"id": 22249, "qty": 1, "name": "Necklace of Anguish"},
+      {"id": 33636, "qty": 1, "name": "Etched Elder Venator Fang"}
+    ]
+  },
+  {
+    "name": "Kodai Wand",
+    "output_id": 21006,
+    "fee": 0,
+    "inputs": [
+      {"id": 6914, "qty": 1, "name": "Master Wand"},
+      {"id": 21043, "qty": 1, "name": "Kodai Insignia"}
     ]
   },
   {
@@ -57,100 +49,9 @@
     "output_id": 26374,
     "fee": 0,
     "inputs": [
-      { "id": 11785, "qty": 1, "name": "Armadyl crossbow" },
-      { "id": 26376, "qty": 1, "name": "Nihil horn" },
-      { "id": 26231, "qty": 250, "name": "Nihil shard" }
-    ]
-  },
-  {
-    "name": "Saturated heart",
-    "output_id": 27277,
-    "fee": 0,
-    "inputs": [
-      { "id": 20724, "qty": 1, "name": "Imbued heart" },
-      { "id": 27276, "qty": 150000, "name": "Ancient essence" }
-    ]
-  },
-  {
-    "name": "Elidinis' ward (f)",
-    "output_id": 27275,
-    "fee": 0,
-    "inputs": [
-      { "id": 27279, "qty": 1, "name": "Elidinis' ward" },
-      { "id": 12827, "qty": 1, "name": "Arcane sigil" }
-    ]
-  },
-  {
-    "name": "Godsword Blade",
-    "output_id": 11798,
-    "fee": 0,
-    "inputs": [
-      { "id": 11818, "qty": 1, "name": "Godsword shard 1" },
-      { "id": 11820, "qty": 1, "name": "Godsword shard 2" },
-      { "id": 11822, "qty": 1, "name": "Godsword shard 3" }
-    ]
-  },
-  {
-    "name": "Armadyl Godsword",
-    "output_id": 11802,
-    "fee": 0,
-    "inputs": [
-      { "id": 11798, "qty": 1, "name": "Godsword blade" },
-      { "id": 11702, "qty": 1, "name": "Armadyl hilt" }
-    ]
-  },
-  {
-    "name": "Bandos Godsword",
-    "output_id": 11804,
-    "fee": 0,
-    "inputs": [
-      { "id": 11798, "qty": 1, "name": "Godsword blade" },
-      { "id": 11704, "qty": 1, "name": "Bandos hilt" }
-    ]
-  },
-  {
-    "name": "Saradomin Godsword",
-    "output_id": 11806,
-    "fee": 0,
-    "inputs": [
-      { "id": 11798, "qty": 1, "name": "Godsword blade" },
-      { "id": 11706, "qty": 1, "name": "Saradomin hilt" }
-    ]
-  },
-  {
-    "name": "Zamorak Godsword",
-    "output_id": 11808,
-    "fee": 0,
-    "inputs": [
-      { "id": 11798, "qty": 1, "name": "Godsword blade" },
-      { "id": 11708, "qty": 1, "name": "Zamorak hilt" }
-    ]
-  },
-  {
-    "name": "Webweaver bow",
-    "output_id": 27658,
-    "fee": 0,
-    "inputs": [
-      { "id": 22547, "qty": 1, "name": "Craw's bow" },
-      { "id": 27662, "qty": 1, "name": "Fang of venenatis" }
-    ]
-  },
-  {
-    "name": "Ursine chainmace",
-    "output_id": 27652,
-    "fee": 0,
-    "inputs": [
-      { "id": 22542, "qty": 1, "name": "Viggora's chainmace" },
-      { "id": 27656, "qty": 1, "name": "Claws of callisto" }
-    ]
-  },
-  {
-    "name": "Accursed sceptre",
-    "output_id": 27655,
-    "fee": 0,
-    "inputs": [
-      { "id": 22552, "qty": 1, "name": "Thammaron's sceptre" },
-      { "id": 27659, "qty": 1, "name": "Skull of vet'ion" }
+      {"id": 11235, "qty": 1, "name": "Armadyl Crossbow"},
+      {"id": 26372, "qty": 1, "name": "Nihil horn"},
+      {"id": 26382, "qty": 250, "name": "Nihil shard (x250)"}
     ]
   }
 ]

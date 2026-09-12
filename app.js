@@ -62,12 +62,10 @@ function renderAssembly(prices, assemblyRecipes) {
     const calculatedRecipes = [];
 
     for (const recipe of assemblyRecipes) {
-        const outData = prices[recipe.output_id];
-        if (!outData || !outData.high) continue;
-
-        const grossSell = outData.high;
-        const tax = Math.min(Math.floor(grossSell * 0.02), 5000000);
-        const netRevenue = grossSell - tax;
+        const outData = prices[recipe.output_id] || {};
+        const grossSell = outData.high || 0;
+        const tax = grossSell > 0 ? Math.min(Math.floor(grossSell * 0.02), 5000000) : 0;
+        const netRevenue = grossSell > 0 ? grossSell - tax : 0;
 
         let totalCost = recipe.fee;
         const components = [];
@@ -77,17 +75,15 @@ function renderAssembly(prices, assemblyRecipes) {
         }
 
         for (const input of recipe.inputs) {
-            const inData = prices[input.id];
-            if (!inData || !inData.low) {
-                totalCost = null;
-                break;
+            const inData = prices[input.id] || {};
+            const unitPrice = inData.low || 0;
+            const compCost = unitPrice > 0 ? unitPrice * input.qty : 0;
+            if (unitPrice > 0) {
+                totalCost += compCost;
             }
-            const unitPrice = inData.low;
-            const compCost = unitPrice * input.qty;
-            totalCost += compCost;
-
             components.push({ name: input.name, cost: compCost, qty: input.qty });
         }
+        if (grossSell === 0) totalCost = 0;
 
         if (totalCost === null) continue;
 

@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OSRS Assembly Profit Tracker</title>
+    <style>
+        body { font-family: monospace; background: #121212; color: #e0e0e0; padding: 20px; }
+        h1 { color: #ff9800; }
+        button { padding: 10px 15px; font-size: 14px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #388e3c; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #333; padding: 8px 12px; text-align: right; }
+        th { background: #1e1e1e; text-align: center; }
+        td:first-child { text-align: left; }
+        .positive { color: #4caf50; font-weight: bold; }
+        .negative { color: #f44336; font-weight: bold; }
+        .item-header { background: #252525; font-weight: bold; text-align: left; color: #ffcc80; }
+        .sub-row { color: #aaa; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+    <h1>OSRS Crafting Margin Tracker</h1>
+    <button onclick="calculateProfits()">Refresh Prices</button>
+    <span id="status" style="margin-left: 15px;"></span>
+
+    <div id="output"></div>
+
+    <script>
+        const RECIPES = [
+            {
+                name: "Necklace of Rupture",
+                output_id: 33639,
+                fee: 0,
+                inputs: [
+                    { id: 19547, qty: 1, name: "Necklace of Anguish" },
+                    { id: 33636, qty: 1, name: "Etched Elder Venator Fang" }
+                ]
+            },
+            {
+                name: "Amulet of Rancour",
+                output_id: 29801,
+                fee: 0,
+                inputs: [
+                    { id: 19553, qty: 1, name: "Amulet of Torture" },
+                    { id: 33534, qty: 1, name: "Etched Araxyte Fang" }
+                ]
+            },
+            {
+                name: "Voidwaker",
+                output_id: 27690,
+                fee: 500000,
+                inputs: [
+                    { id: 27681, qty: 1, name: "Voidwaker Blade" },
+                    { id: 27684, qty: 1, name: "Voidwaker Hilt" },
+                    { id: 27687, qty: 1, name: "Voidwaker Gem" }
+                ]
+            }
+        ];
+
+        async function fetchPrices() {
+            const res = await fetch("https://prices.runescape.wiki/api/v1/osrs/latest", {
+                headers: { "User-Agent": "CraftingTrackerWeb/1.0" }
+            });
+            const json = await res.json();
+            return json.data || {};
+        }
+
+        async function calculateProfits() {
+            document.getElementById("status").innerText = "Fetching live market data...";
+            const prices = await fetchPrices();
+            document.getElementById("status").innerText = "Updated at " + new Date().toLocaleTimeString();
+
+            let html = `<table>
+                <thead>
+                    <tr>
+                        <th style="text-align:left;">Item / Component</th>
+                        <th>Buy Offer (Low)</th>
+                        <th>Sell Offer (High)</th>
+                        <th>GE Tax (2%)</th>
+                        <th>Net Revenue</th>
+                        <th>Net Profit</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            for (const recipe of RECIPES) {
+                const outData = prices[recipe.output_id];
+                if (!outData || !outData.high) continue;
+
+                const grossSell = outData.high;
+                const tax = Math.min(Math.floor(grossSell * 0.02), 5000000);
+                const netRevenue = grossSell - tax;
+
+                let totalCost = recipe.fee;
+                let componentsHtml = "";
+
+                if (recipe.fee > 0) {
+                    componentsHtml += `<tr class="sub-row">
+                        <td>└─ Assembly Fee</td>
+                        <td>${recipe.fee.toLocaleString()}</td>
+                        <td>-</td><td>-</td><td>-</td><td>-</td>
+                    </tr>`;
+                }
+
+                for (const input of recipe.inputs) {
+                    const inData = prices[input.id];
+                    if (!inData || !inData.low) continue;
+                    const unitPrice = inData.low;
+                    const compCost = unitPrice * input.qty;
+                    totalCost += compCost;
+
+                    componentsHtml += `<tr class="sub-row">
+                        <td>└─ ${input.name} (x${input.qty})</td>
+                        <td>${compCost.toLocaleString()}</td>
+                        <td>-</td><td>-</td><td>-</td><td>-</td>
+                    </tr>`;
+                }
+
+                const profit = netRevenue - totalCost;
+                const profitClass = profit >= 0 ? "positive" : "negative";
+
+                html += `<tr class="item-header">
+                    <td>${recipe.name}</td>
+                    <td>${totalCost.toLocaleString()}</td>
+                    <td>${grossSell.toLocaleString()}</td>
+                    <td>-${tax.toLocaleString()}</td>
+                    <td>${netRevenue.toLocaleString()}</td>
+                    <td class="${profitClass}">${profit.toLocaleString()} GP</td>
+                </tr>` + componentsHtml;
+            }
+
+            html += `</tbody></table>`;
+            document.getElementById("output").innerHTML = html;
+        }
+
+        window.onload = calculateProfits;
+    </script>
+</body>
+</html>

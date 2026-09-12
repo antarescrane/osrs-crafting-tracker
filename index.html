@@ -17,7 +17,7 @@
         .item-header { background: #252525; font-weight: bold; text-align: left; color: #ffcc80; }
         .sub-row { color: #aaa; font-size: 0.9em; }
         .best-buy { color: #81c784; font-weight: bold; }
-        .roi { color: #64b5f6; }
+        .roi { color: #64b5f6; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -79,7 +79,6 @@
             const items = await res.json();
             
             const groups = {};
-            // Regex handles standard "Potion(4)", "Extended anti-venom+(4)", etc.
             const potionRegex = /^(.+?)\((\d)\)$/;
 
             for (const item of items) {
@@ -118,6 +117,7 @@
                         <th>GE Tax (2%)</th>
                         <th>Net Revenue</th>
                         <th>Net Profit</th>
+                        <th>ROI %</th>
                     </tr>
                 </thead>
                 <tbody>`;
@@ -137,7 +137,7 @@
                     componentsHtml += `<tr class="sub-row">
                         <td>└─ Assembly Fee</td>
                         <td>${recipe.fee.toLocaleString()}</td>
-                        <td>-</td><td>-</td><td>-</td><td>-</td>
+                        <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
                     </tr>`;
                 }
 
@@ -151,12 +151,13 @@
                     componentsHtml += `<tr class="sub-row">
                         <td>└─ ${input.name} (x${input.qty})</td>
                         <td>${compCost.toLocaleString()}</td>
-                        <td>-</td><td>-</td><td>-</td><td>-</td>
+                        <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
                     </tr>`;
                 }
 
                 const profit = netRevenue - totalCost;
                 const profitClass = profit >= 0 ? "positive" : "negative";
+                const roi = totalCost > 0 ? (profit / totalCost) * 100 : 0;
 
                 html += `<tr class="item-header">
                     <td>${recipe.name}</td>
@@ -165,6 +166,7 @@
                     <td>-${tax.toLocaleString()}</td>
                     <td>${netRevenue.toLocaleString()}</td>
                     <td class="${profitClass}">${profit.toLocaleString()} GP</td>
+                    <td class="roi">${roi.toFixed(1)}%</td>
                 </tr>` + componentsHtml;
             }
 
@@ -224,8 +226,6 @@
                 });
             }
 
-            // Primary Sort: Most Expensive 4-Dose Potion first
-            // Secondary Sort: Highest ROI %
             results.sort((a, b) => {
                 if (b.p4_sell !== a.p4_sell) {
                     return b.p4_sell - a.p4_sell;

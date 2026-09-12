@@ -4,7 +4,7 @@
     "output_id": 27612,
     "fee": 0,
     "inputs": [
-      {"id": 27614, "qty": 5, "name": "Venator Shard"}
+      {"id": 27614, "qty": 5, "name": "Venator Shard (x5)"}
     ]
   },
   {
@@ -51,7 +51,7 @@
     "inputs": [
       {"id": 11235, "qty": 1, "name": "Armadyl Crossbow"},
       {"id": 26372, "qty": 1, "name": "Nihil Horn"},
-      {"id": 26382, "qty": 250, "name": "Nihil Shard"}
+      {"id": 26382, "qty": 250, "name": "Nihil Shard (x250)"}
     ]
   }
 ]

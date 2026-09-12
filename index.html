@@ -99,7 +99,7 @@
                     { id: 27687, qty: 1, name: "Voidwaker Gem" }
                 ]
             },
-            // Full Oathplate Smithing Tree (Shards -> Nuggets -> Chunks -> Plates -> Armor Piece)
+            // Full Oathplate Smithing Tree
             {
                 name: "Oathplate Helm (From Shards & Shale)",
                 output_id: 33605,
@@ -154,7 +154,7 @@
             // Hueycoatl Hide Armour Sets
             {
                 name: "Hueycoatl Hide Body",
-                output_id: 29550, // placeholder id or actual item mapping, checking via wiki mapping dynamically if possible or standard IDs
+                output_id: 29550,
                 fee: 0,
                 inputs: [
                     { id: 29544, qty: 12, name: "Hueycoatl Hide" },
@@ -182,12 +182,13 @@
                     { id: 1734, qty: 1, name: "Thread" }
                 ]
             },
+            // Sailing Dragon Ship Component Progression Tree
             {
-                name: "Dragon Keel Parts",
-                output_id: 30044,
+                name: "Dragon Keel Parts (from Dragon Metal Sheets)",
+                output_id: 32017,
                 fee: 0,
                 inputs: [
-                    { id: 22103, qty: 2, name: "Dragon Metal Sheet" }
+                    { id: 31996, qty: 5, name: "Dragon Metal Sheet" }
                 ]
             },
             {
@@ -195,7 +196,7 @@
                 output_id: 30047,
                 fee: 0,
                 inputs: [
-                    { id: 30044, qty: 2, name: "Dragon Keel Parts" }
+                    { id: 32017, qty: 5, name: "Dragon Keel Parts" }
                 ]
             },
             {
@@ -203,7 +204,7 @@
                 output_id: 30050,
                 fee: 0,
                 inputs: [
-                    { id: 30044, qty: 10, name: "Dragon Keel Parts" },
+                    { id: 32017, qty: 10, name: "Dragon Keel Parts" },
                     { id: 30026, qty: 5, name: "Cupronickel Bar" }
                 ]
             }
@@ -280,7 +281,6 @@
                 }
 
                 for (const input of recipe.inputs) {
-                    // Skip negligible cost tools like needle/thread if price isn't tracked
                     if (input.id === 1733 || input.id === 1734) {
                         components.push({ name: input.name, cost: 0, qty: input.qty });
                         continue;
@@ -288,7 +288,7 @@
 
                     const inData = prices[input.id];
                     if (!inData || !inData.low) {
-                        totalCost = null; // Missing component data
+                        totalCost = null;
                         break;
                     }
                     const unitPrice = inData.low;

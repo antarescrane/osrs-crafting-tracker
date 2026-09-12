@@ -1,4 +1,4 @@
-async function fetchPrices() {
+ï»¿async function fetchPrices() {
     const res = await fetch("https://prices.runescape.wiki/api/v1/osrs/latest", {
         headers: { "User-Agent": "CraftingTrackerWeb/1.0" }
     });
@@ -133,7 +133,7 @@ function renderAssembly(prices, assemblyRecipes) {
         let componentsHtml = "";
         for (const comp of recipe.components) {
             componentsHtml += `<tr class="sub-row">
-                <td>©¸©¤ ${comp.name}</td>
+                <td>ï¿½ï¿½ï¿½ï¿½ ${comp.name}</td>
                 <td>${comp.cost > 0 ? comp.cost.toLocaleString() : "-"}</td>
                 <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
             </tr>`;

@@ -1,5 +1,78 @@
 ﻿[
     {
+        "name":  "Accursed sceptre",
+        "output_id":  27655,
+        "fee":  0,
+        "inputs":  [
+                       {
+                           "id":  22552,
+                           "qty":  1,
+                           "name":  "Thammaron\u0027s sceptre"
+                       },
+                       {
+                           "id":  27659,
+                           "qty":  1,
+                           "name":  "Skull of vet\u0027ion"
+                       }
+                   ]
+    },
+    {
+        "name":  "Ursine chainmace",
+        "output_id":  27652,
+        "fee":  0,
+        "inputs":  [
+                       {
+                           "id":  22542,
+                           "qty":  1,
+                           "name":  "Viggora\u0027s chainmace"
+                       },
+                       {
+                           "id":  27656,
+                           "qty":  1,
+                           "name":  "Claws of callisto"
+                       }
+                   ]
+    },
+    {
+        "name":  "Webweaver bow",
+        "output_id":  27658,
+        "fee":  0,
+        "inputs":  [
+                       {
+                           "id":  22547,
+                           "qty":  1,
+                           "name":  "Craw\u0027s bow"
+                       },
+                       {
+                           "id":  27662,
+                           "qty":  1,
+                           "name":  "Fang of venenatis"
+                       }
+                   ]
+    },
+    {
+        "name":  "Brimstone ring",
+        "output_id":  22931,
+        "fee":  0,
+        "inputs":  [
+                       {
+                           "id":  22933,
+                           "qty":  1,
+                           "name":  "Hydra\u0027s eye"
+                       },
+                       {
+                           "id":  22935,
+                           "qty":  1,
+                           "name":  "Hydra\u0027s fang"
+                       },
+                       {
+                           "id":  22937,
+                           "qty":  1,
+                           "name":  "Hydra\u0027s heart"
+                       }
+                   ]
+    },
+    {
         "name":  "Zamorak Godsword",
         "output_id":  11808,
         "fee":  0,
@@ -195,57 +268,6 @@
                            "id":  27614,
                            "qty":  5,
                            "name":  "Venator Shard"
-                       }
-                   ]
-    },
-    {
-        "name":  "Webweaver Bow",
-        "output_id":  27655,
-        "fee":  0,
-        "inputs":  [
-                       {
-                           "id":  22550,
-                           "qty":  1,
-                           "name":  "Craw\u0027s Bow"
-                       },
-                       {
-                           "id":  27660,
-                           "qty":  1,
-                           "name":  "Fangs of Venenatis"
-                       }
-                   ]
-    },
-    {
-        "name":  "Ursine Chainmace",
-        "output_id":  27652,
-        "fee":  0,
-        "inputs":  [
-                       {
-                           "id":  22542,
-                           "qty":  1,
-                           "name":  "Viggora\u0027s Chainmace"
-                       },
-                       {
-                           "id":  27658,
-                           "qty":  1,
-                           "name":  "Wilderness Hilt"
-                       }
-                   ]
-    },
-    {
-        "name":  "Accursed Sceptre",
-        "output_id":  27662,
-        "fee":  0,
-        "inputs":  [
-                       {
-                           "id":  22545,
-                           "qty":  1,
-                           "name":  "Thammaron\u0027s Sceptre"
-                       },
-                       {
-                           "id":  27665,
-                           "qty":  1,
-                           "name":  "Skull of Vet\u0027ion"
                        }
                    ]
     },

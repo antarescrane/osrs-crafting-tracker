@@ -1,4 +1,4 @@
-﻿async function fetchPrices() {
+async function fetchPrices() {
     const res = await fetch("https://prices.runescape.wiki/api/v1/osrs/latest", {
         headers: { "User-Agent": "CraftingTrackerWeb/1.0" }
     });

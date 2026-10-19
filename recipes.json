@@ -163,22 +163,6 @@
   },
 
   {
-    "name": "Bandosian Components (via Chestplate)",
-    "output_id": 26394,
-    "output_qty": 3,
-    "via": "Chestplate",
-    "fee": 0,
-    "intermediate": true,
-    "inputs": [
-      {
-        "id": 11832,
-        "qty": 1,
-        "name": "Bandos chestplate"
-      }
-    ]
-  },
-
-  {
     "name": "Bandosian Components (via Tassets)",
     "output_id": 26394,
     "output_qty": 2,
@@ -321,6 +305,11 @@
         "id": 26372,
         "qty": 1,
         "name": "Nihil horn"
+      },
+      {
+        "id": 26231,
+        "qty": 250,
+        "name": "Nihil shard"
       }
     ]
   },

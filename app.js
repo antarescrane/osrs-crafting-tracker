@@ -80,10 +80,17 @@ function renderAssembly(prices, assemblyRecipes) {
             }
         }
         if (!intermediateOk) continue;
-        const unitCost = Math.round(intermediateTotal / (recipe.output_qty || 1));
+        const outputQty = recipe.output_qty || 1;
+        const unitCost = Math.round(intermediateTotal / outputQty);
         const existing = intermediateCosts[recipe.output_id];
         if (!existing || unitCost < existing.unitCost) {
-            intermediateCosts[recipe.output_id] = { unitCost: unitCost, via: recipe.via || recipe.name };
+            // display the actual item bought (e.g. Bandos tassets), not the abstract component
+            const src = recipe.inputs[0];
+            intermediateCosts[recipe.output_id] = {
+                unitCost: unitCost,
+                sourceName: src ? src.name : recipe.name,
+                sourceQtyPerUnit: src ? src.qty / outputQty : 1
+            };
         }
     }
 
@@ -108,7 +115,9 @@ function renderAssembly(prices, assemblyRecipes) {
             const intermediate = intermediateCosts[input.id];
             if (intermediate) {
                 unitPrice = intermediate.unitCost;
-                displayName = input.name + " (via " + intermediate.via + ")";
+                const srcQty = input.qty * intermediate.sourceQtyPerUnit;
+                const qtyStr = Number.isInteger(srcQty) ? String(srcQty) : String(Math.round(srcQty * 100) / 100);
+                displayName = intermediate.sourceName + " x" + qtyStr + " (dismantle)";
             } else {
                 const inData = prices[input.id] || {};
                 unitPrice = inData.low || 0;

@@ -305,6 +305,150 @@
         "name": "Hueycoatl hide"
       }
     ]
+  },
+
+  {
+    "name": "Zaryte Crossbow",
+    "output_id": 26374,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 11785,
+        "qty": 1,
+        "name": "Armadyl crossbow"
+      },
+      {
+        "id": 26372,
+        "qty": 1,
+        "name": "Nihil horn"
+      }
+    ]
+  },
+
+  {
+    "name": "Saradomin Godsword",
+    "output_id": 11806,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 11798,
+        "qty": 1,
+        "name": "Godsword blade"
+      },
+      {
+        "id": 11814,
+        "qty": 1,
+        "name": "Saradomin hilt"
+      }
+    ]
+  },
+
+  {
+    "name": "Bandos Godsword",
+    "output_id": 11804,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 11798,
+        "qty": 1,
+        "name": "Godsword blade"
+      },
+      {
+        "id": 11812,
+        "qty": 1,
+        "name": "Bandos hilt"
+      }
+    ]
+  },
+
+  {
+    "name": "Elysian Spirit Shield",
+    "output_id": 12817,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 12831,
+        "qty": 1,
+        "name": "Blessed spirit shield"
+      },
+      {
+        "id": 12819,
+        "qty": 1,
+        "name": "Elysian sigil"
+      }
+    ]
+  },
+
+  {
+    "name": "Dragonfire Shield",
+    "output_id": 11284,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 11286,
+        "qty": 1,
+        "name": "Draconic visage"
+      },
+      {
+        "id": 1540,
+        "qty": 1,
+        "name": "Anti-dragon shield"
+      }
+    ]
+  },
+
+  {
+    "name": "Heavy Ballista",
+    "output_id": 19481,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 19478,
+        "qty": 1,
+        "name": "Light ballista"
+      },
+      {
+        "id": 19610,
+        "qty": 1,
+        "name": "Monkey tail"
+      }
+    ]
+  },
+
+  {
+    "name": "Ancient Wyvern Shield",
+    "output_id": 21634,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 21637,
+        "qty": 1,
+        "name": "Wyvern visage"
+      },
+      {
+        "id": 2890,
+        "qty": 1,
+        "name": "Elemental shield"
+      }
+    ]
+  },
+
+  {
+    "name": "Uncharged Toxic Trident",
+    "output_id": 12900,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 11908,
+        "qty": 1,
+        "name": "Uncharged trident"
+      },
+      {
+        "id": 12932,
+        "qty": 1,
+        "name": "Magic fang"
+      }
+    ]
   }
 
 ]

@@ -177,7 +177,7 @@ function renderAssembly(prices, assemblyRecipes) {
         let componentsHtml = "";
         for (const comp of recipe.components) {
             componentsHtml += `<tr class="sub-row">
-                <td>���� ${comp.name}</td>
+                <td>${comp.name}</td>
                 <td>${comp.cost > 0 ? comp.cost.toLocaleString() : "-"}</td>
                 <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
             </tr>`;

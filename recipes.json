@@ -192,6 +192,119 @@
         "name": "Bandos tassets"
       }
     ]
+  },
+
+  {
+    "name": "Spectral Spirit Shield",
+    "output_id": 12821,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 12831,
+        "qty": 1,
+        "name": "Blessed spirit shield"
+      },
+      {
+        "id": 12823,
+        "qty": 1,
+        "name": "Spectral sigil"
+      }
+    ]
+  },
+
+  {
+    "name": "Odium Ward",
+    "output_id": 11926,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 11928,
+        "qty": 1,
+        "name": "Odium shard 1"
+      },
+      {
+        "id": 11929,
+        "qty": 1,
+        "name": "Odium shard 2"
+      },
+      {
+        "id": 11930,
+        "qty": 1,
+        "name": "Odium shard 3"
+      }
+    ]
+  },
+
+  {
+    "name": "Malediction Ward",
+    "output_id": 11924,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 11931,
+        "qty": 1,
+        "name": "Malediction shard 1"
+      },
+      {
+        "id": 11932,
+        "qty": 1,
+        "name": "Malediction shard 2"
+      },
+      {
+        "id": 11933,
+        "qty": 1,
+        "name": "Malediction shard 3"
+      }
+    ]
+  },
+
+  {
+    "name": "Armadyl Godsword",
+    "output_id": 11802,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 11798,
+        "qty": 1,
+        "name": "Godsword blade"
+      },
+      {
+        "id": 11810,
+        "qty": 1,
+        "name": "Armadyl hilt"
+      }
+    ]
+  },
+
+  {
+    "name": "Dragon Hunter Lance",
+    "output_id": 22978,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 11889,
+        "qty": 1,
+        "name": "Zamorakian hasta"
+      },
+      {
+        "id": 22966,
+        "qty": 1,
+        "name": "Hydra's claw"
+      }
+    ]
+  },
+
+  {
+    "name": "Hueycoatl Hide Armour Set",
+    "output_id": 31169,
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 30085,
+        "qty": 8,
+        "name": "Hueycoatl hide"
+      }
+    ]
   }
 
 ]

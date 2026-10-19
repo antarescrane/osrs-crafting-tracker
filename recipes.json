@@ -28,7 +28,8 @@
         "qty": 1,
         "name": "Etched Araxyte Fang"
       }
-    ]
+    ],
+    "req": "86 Crafting"
   },
 
   {
@@ -69,7 +70,8 @@
         "qty": 1,
         "name": "Etched Elder Venator Fang"
       }
-    ]
+    ],
+    "req": "84 Crafting"
   },
 
   {
@@ -123,7 +125,8 @@
         "qty": 1,
         "name": "Bandosian components"
       }
-    ]
+    ],
+    "req": "90 Smithing"
   },
 
   {
@@ -141,7 +144,8 @@
         "qty": 2,
         "name": "Bandosian components"
       }
-    ]
+    ],
+    "req": "90 Smithing"
   },
 
   {
@@ -159,7 +163,8 @@
         "qty": 2,
         "name": "Bandosian components"
       }
-    ]
+    ],
+    "req": "90 Smithing"
   },
 
   {
@@ -193,7 +198,8 @@
         "qty": 1,
         "name": "Spectral sigil"
       }
-    ]
+    ],
+    "req": "90 Prayer + 85 Smithing"
   },
 
   {
@@ -365,7 +371,8 @@
         "qty": 1,
         "name": "Elysian sigil"
       }
-    ]
+    ],
+    "req": "90 Prayer + 85 Smithing"
   },
 
   {
@@ -383,7 +390,8 @@
         "qty": 1,
         "name": "Anti-dragon shield"
       }
-    ]
+    ],
+    "req": "90 Smithing"
   },
 
   {
@@ -401,7 +409,8 @@
         "qty": 1,
         "name": "Monkey tail"
       }
-    ]
+    ],
+    "req": "72 Fletching"
   },
 
   {
@@ -419,7 +428,8 @@
         "qty": 1,
         "name": "Elemental shield"
       }
-    ]
+    ],
+    "req": "66 Smithing + 66 Magic"
   },
 
   {
@@ -437,7 +447,8 @@
         "qty": 1,
         "name": "Magic fang"
       }
-    ]
+    ],
+    "req": "59 Crafting"
   }
 
 ]

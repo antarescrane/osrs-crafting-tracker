@@ -140,6 +140,7 @@ function renderAssembly(prices, assemblyRecipes) {
 
         calculatedRecipes.push({
             name: recipe.name,
+            req: recipe.req || "",
             totalCost,
             grossSell,
             tax,
@@ -184,7 +185,7 @@ function renderAssembly(prices, assemblyRecipes) {
         }
 
         html += `<tr class="item-header">
-            <td>${recipe.name}</td>
+            <td>${recipe.name}${recipe.req ? `<br><span style="font-size:0.8em;color:#888;">Requires ${recipe.req}</span>` : ""}</td>
             <td>${recipe.totalCost.toLocaleString()}</td>
             <td>${recipe.grossSell.toLocaleString()}</td>
             <td>-${recipe.tax.toLocaleString()}</td>

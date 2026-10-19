@@ -61,7 +61,34 @@ async function calculateAll() {
 function renderAssembly(prices, assemblyRecipes) {
     const calculatedRecipes = [];
 
+    // Price intermediate (craftable-component) recipes first, so inputs
+    // like Bandosian components use the cheapest live dismantle cost
+    // instead of the GE price (which is often unbuyable).
+    const intermediateCosts = {};
     for (const recipe of assemblyRecipes) {
+        if (!recipe.intermediate) continue;
+        let intermediateTotal = recipe.fee || 0;
+        let intermediateOk = true;
+        for (const input of recipe.inputs) {
+            const inData = prices[input.id] || {};
+            const unitPrice = inData.low || 0;
+            if (unitPrice > 0) {
+                intermediateTotal += unitPrice * input.qty;
+            } else {
+                intermediateOk = false;
+                break;
+            }
+        }
+        if (!intermediateOk) continue;
+        const unitCost = Math.round(intermediateTotal / (recipe.output_qty || 1));
+        const existing = intermediateCosts[recipe.output_id];
+        if (!existing || unitCost < existing.unitCost) {
+            intermediateCosts[recipe.output_id] = { unitCost: unitCost, via: recipe.via || recipe.name };
+        }
+    }
+
+    for (const recipe of assemblyRecipes) {
+        if (recipe.intermediate) continue;
         const outData = prices[recipe.output_id] || {};
         const grossSell = outData.high || 0;
         const tax = grossSell > 0 ? Math.min(Math.floor(grossSell * 0.02), 5000000) : 0;
@@ -76,15 +103,23 @@ function renderAssembly(prices, assemblyRecipes) {
         }
 
         for (const input of recipe.inputs) {
-            const inData = prices[input.id] || {};
-            const unitPrice = inData.low || 0;
+            let unitPrice;
+            let displayName = input.name;
+            const intermediate = intermediateCosts[input.id];
+            if (intermediate) {
+                unitPrice = intermediate.unitCost;
+                displayName = input.name + " (via " + intermediate.via + ")";
+            } else {
+                const inData = prices[input.id] || {};
+                unitPrice = inData.low || 0;
+            }
             if (unitPrice > 0) {
                 const compCost = unitPrice * input.qty;
                 totalCost += compCost;
-                components.push({ name: input.name, cost: compCost, qty: input.qty });
+                components.push({ name: displayName, cost: compCost, qty: input.qty });
             } else {
                 hasAllPrices = false;
-                components.push({ name: input.name, cost: 0, qty: input.qty });
+                components.push({ name: displayName, cost: 0, qty: input.qty });
             }
         }
         if (!hasAllPrices) totalCost = null;

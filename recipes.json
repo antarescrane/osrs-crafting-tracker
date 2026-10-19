@@ -1,87 +1,165 @@
 [
+
   {
-    "name": "Venator Bow",
-    "output_id": 27612,
     "fee": 0,
     "inputs": [
       {
         "id": 27614,
-        "qty": 5,
-        "name": "Venator Shard (x5)"
+        "name": "Venator Shard (x5)",
+        "qty": 5
       }
-    ]
+    ],
+    "name": "Venator Bow",
+    "output_id": 27612
   },
+
   {
-    "name": "Amulet of Rancour",
-    "output_id": 29801,
-    "fee": 0,
-    "inputs": [
-      {
-        "id": 19535,
-        "qty": 1,
-        "name": "Amulet of Torture"
-      },
-      {
-        "id": 33534,
-        "qty": 1,
-        "name": "Etched Araxyte Fang"
-      }
-    ]
-  },
-  {
-    "name": "Voidwaker",
-    "output_id": 27690,
-    "fee": 500000,
-    "inputs": [
-      {
-        "id": 27681,
-        "qty": 1,
-        "name": "Voidwaker Hilt"
-      },
-      {
-        "id": 27684,
-        "qty": 1,
-        "name": "Voidwaker Blade"
-      },
-      {
-        "id": 27687,
-        "qty": 1,
-        "name": "Voidwaker Gem"
-      }
-    ]
-  },
-  {
-    "name": "Necklace of Rupture",
-    "output_id": 33639,
     "fee": 0,
     "inputs": [
       {
         "id": 19553,
-        "qty": 1,
-        "name": "Necklace of Anguish"
+        "name": "Amulet of Torture",
+        "qty": 1
+      },
+      {
+        "id": 33534,
+        "name": "Etched Araxyte Fang",
+        "qty": 1
+      }
+    ],
+    "name": "Amulet of Rancour",
+    "output_id": 29801
+  },
+
+  {
+    "fee": 500000,
+    "inputs": [
+      {
+        "id": 27681,
+        "name": "Voidwaker Hilt",
+        "qty": 1
+      },
+      {
+        "id": 27684,
+        "name": "Voidwaker Blade",
+        "qty": 1
+      },
+      {
+        "id": 27687,
+        "name": "Voidwaker Gem",
+        "qty": 1
+      }
+    ],
+    "name": "Voidwaker",
+    "output_id": 27690
+  },
+
+  {
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 19547,
+        "name": "Necklace of Anguish",
+        "qty": 1
       },
       {
         "id": 33636,
-        "qty": 1,
-        "name": "Etched Elder Venator Fang"
+        "name": "Etched Elder Venator Fang",
+        "qty": 1
       }
-    ]
+    ],
+    "name": "Necklace of Rupture",
+    "output_id": 33639
   },
+
   {
-    "name": "Kodai Wand",
-    "output_id": 21006,
     "fee": 0,
     "inputs": [
       {
         "id": 6914,
-        "qty": 1,
-        "name": "Master Wand"
+        "name": "Master Wand",
+        "qty": 1
       },
       {
         "id": 21043,
-        "qty": 1,
-        "name": "Kodai Insignia"
+        "name": "Kodai Insignia",
+        "qty": 1
       }
-    ]
+    ],
+    "name": "Kodai Wand",
+    "output_id": 21006
+  },
+
+  {
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 20724,
+        "name": "Imbued Heart",
+        "qty": 1
+      },
+      {
+        "id": 27616,
+        "name": "Ancient Essence",
+        "qty": 150000
+      }
+    ],
+    "name": "Saturated Heart",
+    "output_id": 27641
+  },
+
+  {
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 26376,
+        "name": "Torva full helm (damaged)",
+        "qty": 1
+      },
+      {
+        "id": 26394,
+        "name": "Bandosian components",
+        "qty": 1
+      }
+    ],
+    "name": "Torva Full Helm",
+    "output_id": 26382
+  },
+
+  {
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 26378,
+        "name": "Torva platebody (damaged)",
+        "qty": 1
+      },
+      {
+        "id": 26394,
+        "name": "Bandosian components",
+        "qty": 2
+      }
+    ],
+    "name": "Torva Platebody",
+    "output_id": 26384
+  },
+
+  {
+    "fee": 0,
+    "inputs": [
+      {
+        "id": 26380,
+        "name": "Torva platelegs (damaged)",
+        "qty": 1
+      },
+      {
+        "id": 26394,
+        "name": "Bandosian components",
+        "qty": 1
+      }
+    ],
+    "name": "Torva Platelegs",
+    "output_id": 26386
   }
+
 ]

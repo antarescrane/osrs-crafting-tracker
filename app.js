@@ -89,6 +89,7 @@ function renderAssembly(prices, assemblyRecipes) {
             intermediateCosts[recipe.output_id] = {
                 unitCost: unitCost,
                 sourceName: src ? src.name : recipe.name,
+                sourceId: src ? src.id : null,
                 sourceQtyPerUnit: src ? src.qty / outputQty : 1
             };
         }
@@ -125,10 +126,10 @@ function renderAssembly(prices, assemblyRecipes) {
             if (unitPrice > 0) {
                 const compCost = unitPrice * input.qty;
                 totalCost += compCost;
-                components.push({ name: displayName, cost: compCost, qty: input.qty });
+                components.push({ name: displayName, cost: compCost, qty: input.qty, id: intermediate ? intermediate.sourceId : input.id });
             } else {
                 hasAllPrices = false;
-                components.push({ name: displayName, cost: 0, qty: input.qty });
+                components.push({ name: displayName, cost: 0, qty: input.qty, id: intermediate ? intermediate.sourceId : input.id });
             }
         }
         if (!hasAllPrices) totalCost = null;
@@ -140,6 +141,7 @@ function renderAssembly(prices, assemblyRecipes) {
 
         calculatedRecipes.push({
             name: recipe.name,
+            outputId: recipe.output_id,
             req: recipe.req || "",
             totalCost,
             grossSell,
@@ -178,14 +180,14 @@ function renderAssembly(prices, assemblyRecipes) {
         let componentsHtml = "";
         for (const comp of recipe.components) {
             componentsHtml += `<tr class="sub-row">
-                <td>${comp.name}</td>
+                <td>${comp.id ? `<a href="https://prices.runescape.wiki/osrs/item/${comp.id}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline dotted;">${comp.name}</a>` : comp.name}</td>
                 <td>${comp.cost > 0 ? comp.cost.toLocaleString() : "-"}</td>
                 <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
             </tr>`;
         }
 
         html += `<tr class="item-header">
-            <td>${recipe.name}${recipe.req ? `<br><span style="font-size:0.8em;color:#888;">Requires ${recipe.req}</span>` : ""}</td>
+            <td><a href="https://prices.runescape.wiki/osrs/item/${recipe.outputId}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline dotted;">${recipe.name}</a>${recipe.req ? `<br><span style="font-size:0.8em;color:#888;">Requires ${recipe.req}</span>` : ""}</td>
             <td>${recipe.totalCost.toLocaleString()}</td>
             <td>${recipe.grossSell.toLocaleString()}</td>
             <td>-${recipe.tax.toLocaleString()}</td>
@@ -248,6 +250,7 @@ function renderDecanting(prices, volumes, potionList) {
 
         results.push({
             name: pot.name,
+            id4: pot.ids[4],
             volume: vol4,
             limit: pot.limit || 2000,
             p4_sell,
@@ -275,7 +278,7 @@ function renderDecanting(prices, volumes, potionList) {
         const limitClass = item.limitProfit >= 0 ? "positive" : "negative";
 
         html += `<tr>
-            <td style="text-align:left; font-weight:bold;">${item.name}</td>
+            <td style="text-align:left; font-weight:bold;"><a href="https://prices.runescape.wiki/osrs/item/${item.id4}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline dotted;">${item.name}</a></td>
             <td>${item.volume.toLocaleString()}</td>
             <td>${item.limit.toLocaleString()}</td>
             <td>${item.p4_sell.toLocaleString()} GP</td>

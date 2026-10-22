@@ -242,14 +242,15 @@ function renderDecanting(prices, volumes, potionList) {
         if (!p4_sell || vol4 < 1500) continue;
 
         const options = [];
-        if (p1) options.push({ dose: 1, unitPrice: p1, costFor4: p1 * 4 });
-        if (p2) options.push({ dose: 2, unitPrice: p2, costFor4: p2 * 2 });
-        if (p3) options.push({ dose: 3, unitPrice: p3, costFor4: (p3 / 3) * 4 });
+        if (p1) options.push({ dose: 1, unitPrice: p1, costFor4: p1 * 4, vol: volumes[pot.ids[1]] || 0 });
+        if (p2) options.push({ dose: 2, unitPrice: p2, costFor4: p2 * 2, vol: volumes[pot.ids[2]] || 0 });
+        if (p3) options.push({ dose: 3, unitPrice: p3, costFor4: (p3 / 3) * 4, vol: volumes[pot.ids[3]] || 0 });
 
         if (options.length === 0) continue;
 
         options.sort((a, b) => a.costFor4 - b.costFor4);
-        const best = options[0];
+        const liquidOptions = options.filter(o => o.vol >= 10);
+        const best = liquidOptions.length ? liquidOptions[0] : options[0];
 
         const grossSell = p4_sell;
         const tax = Math.min(Math.floor(grossSell * 0.02), 5000000);
@@ -267,6 +268,7 @@ function renderDecanting(prices, volumes, potionList) {
             limit: pot.limit || 2000,
             p4_sell,
             bestDose: best.dose,
+            bestVol: best.vol,
             bestUnitPrice: best.unitPrice,
             bestCostFor4: best.costFor4,
             profit,
@@ -278,9 +280,12 @@ function renderDecanting(prices, volumes, potionList) {
 
     const sortBy = document.getElementById("potion-sort").value;
     results.sort((a, b) => {
+        if (sortBy === "volume") return b.volume - a.volume;
+        const tierA = a.bestVol >= 10 ? 0 : 1;
+        const tierB = b.bestVol >= 10 ? 0 : 1;
+        if (tierA !== tierB) return tierA - tierB;
         if (sortBy === "roi") return b.roi - a.roi;
         if (sortBy === "profit") return b.profit - a.profit;
-        if (sortBy === "volume") return b.volume - a.volume;
         if (sortBy === "limitProfit") return b.limitProfit - a.limitProfit;
         return b.customScore - a.customScore;
     });
@@ -294,7 +299,7 @@ function renderDecanting(prices, volumes, potionList) {
             <td>${item.volume.toLocaleString()}</td>
             <td>${item.limit.toLocaleString()}</td>
             <td>${item.p4_sell.toLocaleString()} GP</td>
-            <td class="best-buy">Buy (${item.bestDose})-dose @ ${Math.round(item.bestUnitPrice).toLocaleString()} GP each <span style="color:#aaa; font-size:0.85em;">(= ${Math.round(item.bestCostFor4).toLocaleString()} total)</span></td>
+            <td class="best-buy">Buy (${item.bestDose})-dose @ ${Math.round(item.bestUnitPrice).toLocaleString()} GP each <span style="color:#aaa; font-size:0.85em;">(= ${Math.round(item.bestCostFor4).toLocaleString()} total)</span> <span style="font-size:0.85em;color:${item.bestVol < 10 ? "#e8a33d" : "#aaa"};">(vol ${item.bestVol.toLocaleString()}/day)</span></td>
             <td class="${profitClass}">${Math.round(item.profit).toLocaleString()} GP</td>
             <td class="${limitClass}">${Math.round(item.limitProfit).toLocaleString()} GP</td>
             <td class="roi">${item.roi.toFixed(1)}%</td>

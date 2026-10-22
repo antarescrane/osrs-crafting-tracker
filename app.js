@@ -54,11 +54,11 @@ async function calculateAll() {
     ]);
     document.getElementById("status").innerText = "Updated at " + new Date().toLocaleTimeString();
 
-    renderAssembly(prices, recipes);
+    renderAssembly(prices, volumes, recipes);
     renderDecanting(prices, volumes, potionList);
 }
 
-function renderAssembly(prices, assemblyRecipes) {
+function renderAssembly(prices, volumes, assemblyRecipes) {
     const calculatedRecipes = [];
 
     // Price intermediate (craftable-component) recipes first, so inputs
@@ -126,15 +126,19 @@ function renderAssembly(prices, assemblyRecipes) {
             if (unitPrice > 0) {
                 const compCost = unitPrice * input.qty;
                 totalCost += compCost;
-                components.push({ name: displayName, cost: compCost, qty: input.qty, id: intermediate ? intermediate.sourceId : input.id });
+                components.push({ name: displayName, cost: compCost, qty: input.qty, id: intermediate ? intermediate.sourceId : input.id, vol: volumes[intermediate ? intermediate.sourceId : input.id] || 0 });
             } else {
                 hasAllPrices = false;
-                components.push({ name: displayName, cost: 0, qty: input.qty, id: intermediate ? intermediate.sourceId : input.id });
+                components.push({ name: displayName, cost: 0, qty: input.qty, id: intermediate ? intermediate.sourceId : input.id, vol: volumes[intermediate ? intermediate.sourceId : input.id] || 0 });
             }
         }
         if (!hasAllPrices) totalCost = null;
 
         if (totalCost === null) continue;
+
+        const outVol = volumes[recipe.output_id] || 0;
+        const compVols = components.filter(c => typeof c.vol === "number").map(c => c.vol);
+        const bottleneck = compVols.length ? Math.min(outVol, ...compVols) : outVol;
 
         const profit = netRevenue - totalCost;
         const roi = totalCost > 0 ? (profit / totalCost) * 100 : 0;
@@ -142,6 +146,8 @@ function renderAssembly(prices, assemblyRecipes) {
         calculatedRecipes.push({
             name: recipe.name,
             outputId: recipe.output_id,
+            outVol,
+            bottleneck,
             req: recipe.req || "",
             totalCost,
             grossSell,
@@ -155,8 +161,11 @@ function renderAssembly(prices, assemblyRecipes) {
 
     const sortBy = document.getElementById("assembly-sort").value;
     calculatedRecipes.sort((a, b) => {
-        if (sortBy === "roi") return b.roi - a.roi;
         if (sortBy === "name") return a.name.localeCompare(b.name);
+        const tierA = a.bottleneck >= 10 ? 0 : 1;
+        const tierB = b.bottleneck >= 10 ? 0 : 1;
+        if (tierA !== tierB) return tierA - tierB;
+        if (sortBy === "roi") return b.roi - a.roi;
         return b.profit - a.profit;
     });
 
@@ -170,6 +179,7 @@ function renderAssembly(prices, assemblyRecipes) {
                 <th>Net Revenue</th>
                 <th>Net Profit</th>
                 <th>ROI %</th>
+                <th>24h Vol</th>
             </tr>
         </thead>
         <tbody>`;
@@ -183,6 +193,7 @@ function renderAssembly(prices, assemblyRecipes) {
                 <td>${comp.id ? `<a href="https://prices.runescape.wiki/osrs/item/${comp.id}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline dotted;">${comp.name}</a>` : comp.name}</td>
                 <td>${comp.cost > 0 ? comp.cost.toLocaleString() : "-"}</td>
                 <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                <td>${typeof comp.vol === "number" ? comp.vol.toLocaleString() : "-"}</td>
             </tr>`;
         }
 
@@ -194,6 +205,7 @@ function renderAssembly(prices, assemblyRecipes) {
             <td>${recipe.netRevenue.toLocaleString()}</td>
             <td class="${profitClass}">${recipe.profit.toLocaleString()} GP</td>
             <td class="roi">${recipe.roi.toFixed(1)}%</td>
+            <td${recipe.bottleneck < 10 ? ' style="color:#e8a33d;" title="Bottleneck volume under 10/day"' : ""}>${recipe.outVol.toLocaleString()}</td>
         </tr>` + componentsHtml;
     }
 
